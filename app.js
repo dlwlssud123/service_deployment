@@ -52,6 +52,50 @@ const menus = {
         { name: '소곱창전골', emoji: '🥘' },
         { name: '쪽갈비', emoji: '🍖' },
         { name: '똠양꿍', emoji: '🍲' }
+    ],
+    lateNight: [
+        { name: '라면', emoji: '🍜' },
+        { name: '불닭볶음면', emoji: '🔥' },
+        { name: '야채곱창', emoji: '🥘' },
+        { name: '오돌뼈', emoji: '🦴' },
+        { name: '골뱅이소면', emoji: '🐚' },
+        { name: '닭강정', emoji: '🍗' },
+        { name: '타코야끼', emoji: '🐙' },
+        { name: '콘치즈', emoji: '🌽' },
+        { name: '계란말이', emoji: '🍳' },
+        { name: '편의점 도시락', emoji: '🍱' },
+        { name: '순대볶음', emoji: '🥘' },
+        { name: '튀김세트', emoji: '🍤' },
+        { name: '닭꼬치', emoji: '🍢' },
+        { name: '김치전', emoji: '🥞' },
+        { name: '해물파전', emoji: '🥞' },
+        { name: '군만두', emoji: '🥟' },
+        { name: '떡꼬치', emoji: '🍢' },
+        { name: '먹태', emoji: '🐟' },
+        { name: '나초', emoji: '🌮' },
+        { name: '소시지', emoji: '🌭' }
+    ],
+    dessert: [
+        { name: '크로플', emoji: '🥐' },
+        { name: '마카롱', emoji: '🍪' },
+        { name: '탕후루', emoji: '🍓' },
+        { name: '조각 케이크', emoji: '🍰' },
+        { name: '빙수', emoji: '🍧' },
+        { name: '푸딩', emoji: '🍮' },
+        { name: '도너츠', emoji: '🍩' },
+        { name: '아이스크림', emoji: '🍦' },
+        { name: '츄러스', emoji: '🥨' },
+        { name: '와플', emoji: '🧇' },
+        { name: '쿠키', emoji: '🍪' },
+        { name: '에그타르트', emoji: '🥧' },
+        { name: '티라미수', emoji: '🍮' },
+        { name: '크레페', emoji: '🥞' },
+        { name: '딸기모찌', emoji: '🍓' },
+        { name: '요거트 아이스크림', emoji: '🍦' },
+        { name: '약과', emoji: '🍯' },
+        { name: '붕어빵', emoji: '🐟' },
+        { name: '호떡', emoji: '🥞' },
+        { name: '베이글', emoji: '🥯' }
     ]
 };
 
@@ -96,6 +140,14 @@ function resetResult() {
     recommendBtn.textContent = '추천받기!';
 }
 
+// Category Name Mapping
+const categoryNames = {
+    lunch: '점심 추천',
+    dinner: '저녁 추천',
+    lateNight: '야식 추천',
+    dessert: '디저트 추천'
+};
+
 // Recommend Logic
 recommendBtn.addEventListener('click', () => {
     // UI state: Loading
@@ -112,7 +164,7 @@ recommendBtn.addEventListener('click', () => {
         const categoryMenus = menus[currentCategory];
         const randomMenu = categoryMenus[Math.floor(Math.random() * categoryMenus.length)];
 
-        resultCategory.textContent = currentCategory === 'lunch' ? '점심 추천' : '저녁 추천';
+        resultCategory.textContent = categoryNames[currentCategory];
         resultMenu.textContent = randomMenu.name;
         resultEmoji.textContent = randomMenu.emoji;
         

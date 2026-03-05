@@ -85,7 +85,7 @@ header p {
     position: absolute;
     top: 5px;
     left: 5px;
-    width: calc(50% - 5px);
+    width: calc(25% - 5px);
     height: calc(100% - 10px);
     background: var(--primary-color);
     border-radius: 12px;
