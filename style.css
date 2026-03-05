@@ -87,7 +87,7 @@ header p {
     position: absolute;
     top: 5px;
     left: 5px;
-    width: calc(25% - 5px); /* 4개 탭에 맞춤 */
+    width: calc((100% - 10px) / 4); /* 정확한 1/4 너비 계산 */
     height: calc(100% - 10px);
     background: var(--primary-color);
     border-radius: 12px;
