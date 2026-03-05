@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘 뭐 먹지? | 점메추 & 저메추</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>오늘 뭐 먹지? 🍲</h1>
+            <p>당신의 결정을 도와드리는 메뉴 추천</p>
+        </header>
+
+        <main>
+            <div class="category-tabs">
+                <button class="tab-btn active" data-category="lunch">점메추</button>
+                <button class="tab-btn" data-category="dinner">저메추</button>
+                <div class="tab-slider"></div>
+            </div>
+
+            <div class="result-card" id="resultCard">
+                <div class="result-placeholder">버튼을 눌러 메뉴를 골라보세요!</div>
+                
+                <div class="loading-container hidden" id="loadingContainer">
+                    <div class="spinner"></div>
+                    <p class="loading-text">메뉴 고르는 중...</p>
+                </div>
+
+                <div class="result-content hidden" id="resultContent">
+                    <span class="category-tag" id="resultCategory"></span>
+                    <h2 id="resultMenu">제육볶음</h2>
+                    <p id="resultEmoji">🍱</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="recommendBtn" class="main-btn">추천받기!</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2026 메뉴 추천 전문가 | 배포 실습 프로젝트</p>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
