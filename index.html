@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 뭐 먹지? | 점메추 & 저메추</title>
+    <title>오늘 뭐 먹지? | 카테고리별 메뉴 추천</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,20 +13,22 @@
     <div class="container">
         <header>
             <h1>오늘 뭐 먹지? 🍲</h1>
-            <p>당신의 결정을 도와드리는 메뉴 추천</p>
+            <p>메뉴 고민 끝! 종류별로 골라보세요</p>
         </header>
 
         <main>
             <div class="category-tabs">
-                <button class="tab-btn active" data-category="lunch">점메추</button>
-                <button class="tab-btn" data-category="dinner">저메추</button>
-                <button class="tab-btn" data-category="lateNight">야식</button>
+                <button class="tab-btn active" data-category="korean">한식</button>
+                <button class="tab-btn" data-category="japanese">일식</button>
+                <button class="tab-btn" data-category="chinese">중식</button>
+                <button class="tab-btn" data-category="western">양식</button>
+                <button class="tab-btn" data-category="snacks">분식/야식</button>
                 <button class="tab-btn" data-category="dessert">디저트</button>
                 <div class="tab-slider"></div>
             </div>
 
             <div class="result-card" id="resultCard">
-                <div class="result-placeholder">버튼을 눌러 메뉴를 골라보세요!</div>
+                <div class="result-placeholder">위 카테고리를 선택하고<br>추천 버튼을 눌러보세요!</div>
                 
                 <div class="loading-container hidden" id="loadingContainer">
                     <div class="spinner"></div>
@@ -42,12 +44,12 @@
             </div>
 
             <div class="actions">
-                <button id="recommendBtn" class="main-btn">추천받기!</button>
+                <button id="recommendBtn" class="main-btn">메뉴 추천받기!</button>
             </div>
         </main>
 
         <footer>
-            <p>© 2026 메뉴 추천 전문가 </p>
+            <p>© 2026 메뉴 추천 전문가 | 맞춤형 분류 버전</p>
         </footer>
     </div>
     <script src="app.js"></script>
