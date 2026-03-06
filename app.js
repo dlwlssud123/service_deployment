@@ -86,106 +86,84 @@ const resultMenu = document.getElementById('resultMenu');
 const resultEmoji = document.getElementById('resultEmoji');
 const naverSearchBtn = document.getElementById('naverSearchBtn');
 const bookmarkBtn = document.getElementById('bookmarkBtn');
-const historyList = document.getElementById('historyList');
-const bookmarkList = document.getElementById('bookmarkList');
-const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+const historyBtn = document.getElementById('recommendHistoryBtn');
+const bookmarkListBtn = document.getElementById('bookmarkListBtn');
+const listOverlay = document.getElementById('listOverlay');
+const listTitle = document.getElementById('listTitle');
+const displayList = document.getElementById('displayList');
+const closeListBtn = document.getElementById('closeListBtn');
+const clearBtn = document.getElementById('clearBtn');
 
 // --- State ---
 let currentMain = 'lunch';
 let currentSub = 'all';
+let currentListView = 'history'; // 'history' or 'bookmark'
+
 let foodHistory = JSON.parse(localStorage.getItem('foodHistory') || '[]');
 let bookmarks = JSON.parse(localStorage.getItem('foodBookmarks') || '[]');
 
-// --- Global Functions (Explicitly attached to window for HTML inline calls) ---
-window.openNaver = function(name) {
+// --- Functions ---
+
+function updateStorage(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+function openNaver(name) {
     const query = encodeURIComponent(name + ' 맛집');
     window.open(`https://search.naver.com/search.naver?query=${query}`, '_blank');
-};
+}
 
-window.toggleBookmark = function(name, emoji) {
+function renderList() {
+    displayList.innerHTML = '';
+    const data = currentListView === 'history' ? foodHistory : bookmarks;
+    
+    if (data.length === 0) {
+        displayList.innerHTML = `<li style="text-align:center; padding:40px; color:#adb5bd;">기록이 없습니다.</li>`;
+        return;
+    }
+
+    data.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = `
+            <span>${item.emoji} ${item.name}</span>
+            <small style="color:#adb5bd; font-size:0.7rem;">${item.date || ''}</small>
+        `;
+        li.onclick = () => openNaver(item.name);
+        displayList.appendChild(li);
+    });
+}
+
+function toggleList(view) {
+    currentListView = view;
+    listTitle.textContent = view === 'history' ? '🕒 최근 추천 히스토리' : '⭐ 즐겨찾는 북마크';
+    renderList();
+    listOverlay.classList.remove('hidden');
+}
+
+function toggleBookmark(name, emoji) {
     const index = bookmarks.findIndex(b => b.name === name);
     if (index > -1) {
         bookmarks.splice(index, 1);
-        if (resultMenu.textContent === name) bookmarkBtn.textContent = '🤍';
+        bookmarkBtn.textContent = '🤍';
     } else {
-        bookmarks.push({ name, emoji });
-        if (resultMenu.textContent === name) bookmarkBtn.textContent = '❤️';
+        if (bookmarks.length >= 10) bookmarks.pop(); // 최대 10개 제한
+        bookmarks.unshift({ name, emoji, date: '북마크됨' });
+        bookmarkBtn.textContent = '❤️';
     }
-    localStorage.setItem('foodBookmarks', JSON.stringify(bookmarks));
-    renderBookmarks();
-};
-
-// --- Helper Functions ---
-function renderHistory() {
-    historyList.innerHTML = '';
-    if (foodHistory.length === 0) {
-        historyList.innerHTML = '<li style="text-align:center; color:#adb5bd; font-size:0.85rem; padding:15px;">아직 추천 기록이 없습니다.</li>';
-        clearHistoryBtn.style.display = 'none';
-        return;
-    }
-    clearHistoryBtn.style.display = 'block';
-    foodHistory.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'history-item';
-        li.innerHTML = `
-            <span class="menu-info">${item.emoji} ${item.name}</span>
-            <span class="date-info">${item.date}</span>
-        `;
-        li.onclick = () => window.openNaver(item.name);
-        historyList.appendChild(li);
-    });
+    updateStorage('foodBookmarks', bookmarks);
 }
 
-function renderBookmarks() {
-    bookmarkList.innerHTML = '';
-    if (bookmarks.length === 0) {
-        bookmarkList.innerHTML = '<li style="text-align:center; color:#adb5bd; font-size:0.85rem; padding:15px;">좋아하는 메뉴를 저장해 보세요!</li>';
-        return;
-    }
-    bookmarks.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'history-item';
-        li.innerHTML = `
-            <span class="menu-info">${item.emoji} ${item.name}</span>
-            <span class="delete-bookmark" onclick="event.stopPropagation(); window.toggleBookmark('${item.name}', '${item.emoji}')">제거</span>
-        `;
-        li.onclick = () => window.openNaver(item.name);
-        bookmarkList.appendChild(li);
-    });
-}
+// --- Events ---
 
-function saveToHistory(name, emoji) {
-    const now = new Date();
-    const dateStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    foodHistory.unshift({ name, emoji, date: dateStr });
-    if (foodHistory.length > 5) foodHistory.pop();
-    localStorage.setItem('foodHistory', JSON.stringify(foodHistory));
-    renderHistory();
-}
-
-function resetResult() {
-    resultPlaceholder.classList.remove('hidden');
-    resultContent.classList.add('hidden');
-    loadingContainer.classList.add('hidden');
-    resultCard.classList.remove('active');
-    recommendBtn.textContent = '메뉴 추천받기!';
-    recommendBtn.disabled = false;
-}
-
-// --- Event Listeners ---
 mainTabBtns.forEach((btn, index) => {
     btn.addEventListener('click', () => {
         mainTabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         tabSlider.style.transform = `translateX(${index * 100}%)`;
         currentMain = btn.dataset.category;
-        
-        if (currentMain === 'dessert') {
-            subTabsContainer.style.display = 'none';
-        } else {
-            subTabsContainer.style.display = 'flex';
-        }
-        
+        subTabsContainer.style.display = currentMain === 'dessert' ? 'none' : 'flex';
         resetResult();
     });
 });
@@ -199,8 +177,14 @@ subTabBtns.forEach(btn => {
     });
 });
 
-const mainLabels = { lunch: '점심 추천', dinner: '저녁 추천', lateNight: '야식 추천', dessert: '디저트 추천' };
-const subLabels = { korean: '한식', japanese: '일식', chinese: '중식', western: '양식', others: '기타', all: '전체' };
+function resetResult() {
+    resultPlaceholder.classList.remove('hidden');
+    resultContent.classList.add('hidden');
+    loadingContainer.classList.add('hidden');
+    resultCard.classList.remove('active');
+    recommendBtn.textContent = '메뉴 추천받기!';
+    recommendBtn.disabled = false;
+}
 
 recommendBtn.addEventListener('click', () => {
     resultPlaceholder.classList.add('hidden');
@@ -208,46 +192,35 @@ recommendBtn.addEventListener('click', () => {
     loadingContainer.classList.remove('hidden');
     resultCard.classList.remove('active');
     recommendBtn.disabled = true;
-    recommendBtn.textContent = '메뉴 고르는 중...';
 
     setTimeout(() => {
         let pool = [];
-        let finalSubLabel = '';
-
+        const mainData = menus[currentMain];
+        
         if (currentMain === 'dessert') {
             pool = menus.dessert;
-            finalSubLabel = '달콤한 디저트';
         } else {
-            const mainData = menus[currentMain];
-            if (currentSub === 'all') {
-                pool = Object.values(mainData).flat();
-                finalSubLabel = '다양한 장르';
-            } else {
-                pool = mainData[currentSub];
-                finalSubLabel = subLabels[currentSub];
-            }
-        }
-
-        if (!pool || pool.length === 0) {
-            alert('해당 카테고리에 메뉴가 없습니다.');
-            resetResult();
-            return;
+            pool = currentSub === 'all' ? Object.values(mainData).flat() : mainData[currentSub];
         }
 
         const randomMenu = pool[Math.floor(Math.random() * pool.length)];
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        resultMainTag.textContent = mainLabels[currentMain];
-        resultSubTag.textContent = finalSubLabel;
+        // 데이터 업데이트
+        foodHistory.unshift({ name: randomMenu.name, emoji: randomMenu.emoji, date: timeStr });
+        if (foodHistory.length > 10) foodHistory.pop(); // 최대 10개 제한
+        updateStorage('foodHistory', foodHistory);
+
+        // UI 업데이트
+        resultMainTag.textContent = currentMain === 'lunch' ? '점심' : currentMain === 'dinner' ? '저녁' : currentMain === 'lateNight' ? '야식' : '디저트';
+        resultSubTag.textContent = currentSub === 'all' ? '전체' : currentSub;
         resultMenu.textContent = randomMenu.name;
         resultEmoji.textContent = randomMenu.emoji;
         
-        // 북마크 상태 확인
         const isBookmarked = bookmarks.some(b => b.name === randomMenu.name);
         bookmarkBtn.textContent = isBookmarked ? '❤️' : '🤍';
         
         naverSearchBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(randomMenu.name + ' 맛집')}`;
-
-        saveToHistory(randomMenu.name, randomMenu.emoji);
 
         loadingContainer.classList.add('hidden');
         resultContent.classList.remove('hidden');
@@ -258,17 +231,28 @@ recommendBtn.addEventListener('click', () => {
 });
 
 bookmarkBtn.addEventListener('click', () => {
-    window.toggleBookmark(resultMenu.textContent, resultEmoji.textContent);
+    toggleBookmark(resultMenu.textContent, resultEmoji.textContent);
 });
 
-clearHistoryBtn.addEventListener('click', () => {
-    if (confirm('모든 추천 기록을 삭제할까요?')) {
-        foodHistory = [];
-        localStorage.removeItem('foodHistory');
-        renderHistory();
+historyBtn.addEventListener('click', () => toggleList('history'));
+bookmarkListBtn.addEventListener('click', () => toggleList('bookmark'));
+closeListBtn.addEventListener('click', () => listOverlay.classList.add('hidden'));
+
+clearBtn.addEventListener('click', () => {
+    if (confirm('전체 삭제하시겠습니까?')) {
+        if (currentListView === 'history') {
+            foodHistory = [];
+            updateStorage('foodHistory', []);
+        } else {
+            bookmarks = [];
+            updateStorage('foodBookmarks', []);
+            bookmarkBtn.textContent = '🤍';
+        }
+        renderList();
     }
 });
 
-// --- Initial Setup ---
-renderHistory();
-renderBookmarks();
+// 외부 클릭 시 닫기
+window.onclick = (event) => {
+    if (event.target == listOverlay) listOverlay.classList.add('hidden');
+};
