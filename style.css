@@ -87,7 +87,7 @@ header p {
     position: absolute;
     top: 5px;
     left: 5px;
-    width: calc((100% - 10px) / 4); /* 정확한 1/4 너비 계산 */
+    width: calc((100% - 10px) / 4);
     height: calc(100% - 10px);
     background: var(--primary-color);
     border-radius: 12px;
@@ -126,7 +126,6 @@ header p {
     color: white;
     border-color: var(--secondary-color);
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(78, 205, 196, 0.2);
 }
 
 /* 결과 카드 */
@@ -239,13 +238,66 @@ header p {
     transform: scale(1.02);
 }
 
-.main-btn:active {
-    transform: scale(0.98);
+/* 히스토리 섹션 스타일 */
+.history-section {
+    margin-top: 40px;
+    text-align: left;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 24px;
 }
 
-.main-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+.history-section h3 {
+    font-size: 0.95rem;
+    color: #495057;
+    margin-bottom: 15px;
+}
+
+#historyList {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    animation: slideIn 0.3s ease-out;
+}
+
+.history-item .menu-info {
+    font-weight: 700;
+    color: #212529;
+    font-size: 0.95rem;
+}
+
+.history-item .date-info {
+    font-size: 0.75rem;
+    color: #adb5bd;
+}
+
+.clear-btn {
+    width: 100%;
+    padding: 10px;
+    background: none;
+    border: 1px solid #e9ecef;
+    color: #adb5bd;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.clear-btn:hover {
+    background: #fff0f0;
+    color: #ff6b6b;
+    border-color: #ff6b6b;
 }
 
 /* 로딩 스피너 */
@@ -269,28 +321,6 @@ header p {
     animation: spin 1s linear infinite;
 }
 
-.local_storage {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px; /* 버튼 간격 조정 */
-}
-
-.local_storage .sub-btn {
-    flex: 1; /* 버튼이 동일한 너비를 가지도록 */
-    padding: 12px 5px;
-    font-size: 0.85rem;
-    background: #f8f9fa;
-    color: #495057;
-    border: 1px solid #e9ecef;
-    box-shadow: none;
-}
-
-.local_storage .sub-btn:hover {
-    background: #e9ecef;
-    transform: translateY(-1px);
-}
-
 footer {
     margin-top: 35px;
     font-size: 0.85rem;
@@ -302,15 +332,12 @@ footer {
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 30px 20px;
-        border-radius: 0;
-        min-height: 100vh;
-    }
 }

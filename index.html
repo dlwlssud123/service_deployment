@@ -59,14 +59,16 @@
                 <button id="recommendBtn" class="main-btn">메뉴 추천받기!</button>
             </div>
 
-            <div class="local_storage">
-                <button id="recommendHistoryBtn" class="sub-btn">추천 히스토리 💾</button>
-                <button id="BookmarkBtn" class="sub-btn">북마크 ⭐</button>
+            <!-- 추천 히스토리 세션 -->
+            <div class="history-section">
+                <h3>🕒 최근 추천 기록</h3>
+                <ul id="historyList"></ul>
+                <button id="clearHistoryBtn" class="clear-btn">기록 전체 삭제</button>
             </div>
         </main>
 
         <footer>
-            <p>© 2026 메뉴 추천 전문가</p>
+            <p>© 2026 메뉴 추천 전문가 | 2단계 필터링 버전</p>
         </footer>
     </div>
     <script src="app.js"></script>

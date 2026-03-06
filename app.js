@@ -70,6 +70,46 @@ const menus = {
     ]
 };
 
+// LocalStorage History Logic
+let foodHistory = JSON.parse(localStorage.getItem('foodHistory') || '[]');
+const historyList = document.getElementById('historyList');
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+function renderHistory() {
+    historyList.innerHTML = '';
+    
+    if (foodHistory.length === 0) {
+        historyList.innerHTML = '<li style="text-align:center; color:#adb5bd; font-size:0.85rem; padding:15px;">아직 추천 기록이 없습니다.</li>';
+        clearHistoryBtn.style.display = 'none';
+        return;
+    }
+
+    clearHistoryBtn.style.display = 'block';
+    
+    foodHistory.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = `
+            <span class="menu-info">${item.emoji} ${item.name}</span>
+            <span class="date-info">${item.date}</span>
+        `;
+        historyList.appendChild(li);
+    });
+}
+
+function saveToHistory(name, emoji) {
+    const now = new Date();
+    const dateStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    const newRecord = { name, emoji, date: dateStr };
+    foodHistory.unshift(newRecord);
+    
+    if (foodHistory.length > 5) foodHistory.pop(); // 최대 5개 유지
+    
+    localStorage.setItem('foodHistory', JSON.stringify(foodHistory));
+    renderHistory();
+}
+
 let currentMain = 'lunch';
 let currentSub = 'all';
 
@@ -89,6 +129,9 @@ const resultMenu = document.getElementById('resultMenu');
 const resultEmoji = document.getElementById('resultEmoji');
 const naverSearchBtn = document.getElementById('naverSearchBtn');
 
+// 초기 히스토리 렌더링
+renderHistory();
+
 // Main Tab Logic
 mainTabBtns.forEach((btn, index) => {
     btn.addEventListener('click', () => {
@@ -100,7 +143,6 @@ mainTabBtns.forEach((btn, index) => {
         
         currentMain = btn.dataset.category;
         
-        // 디저트면 서브탭 숨기기
         if (currentMain === 'dessert') {
             subTabsContainer.classList.add('hidden');
         } else {
@@ -111,7 +153,6 @@ mainTabBtns.forEach((btn, index) => {
     });
 });
 
-// Sub Tab Logic
 subTabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         subTabBtns.forEach(b => b.classList.remove('active'));
@@ -167,10 +208,22 @@ recommendBtn.addEventListener('click', () => {
         
         naverSearchBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(randomMenu.name + ' 맛집')}`;
 
+        // 히스토리에 저장
+        saveToHistory(randomMenu.name, randomMenu.emoji);
+
         loadingContainer.classList.add('hidden');
         resultContent.classList.remove('hidden');
         resultCard.classList.add('active');
         recommendBtn.disabled = false;
         recommendBtn.textContent = '다른 메뉴 보기';
     }, 800);
+});
+
+// 기록 전체 삭제 버튼
+clearHistoryBtn.addEventListener('click', () => {
+    if (confirm('모든 추천 기록을 삭제할까요?')) {
+        foodHistory = [];
+        localStorage.removeItem('foodHistory');
+        renderHistory();
+    }
 });
