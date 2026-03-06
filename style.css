@@ -269,6 +269,28 @@ header p {
     animation: spin 1s linear infinite;
 }
 
+.local_storage {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px; /* 버튼 간격 조정 */
+}
+
+.local_storage .sub-btn {
+    flex: 1; /* 버튼이 동일한 너비를 가지도록 */
+    padding: 12px 5px;
+    font-size: 0.85rem;
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #e9ecef;
+    box-shadow: none;
+}
+
+.local_storage .sub-btn:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
 footer {
     margin-top: 35px;
     font-size: 0.85rem;
