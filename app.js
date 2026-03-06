@@ -70,21 +70,52 @@ const menus = {
     ]
 };
 
-// --- LocalStorage Logic ---
-let foodHistory = JSON.parse(localStorage.getItem('foodHistory') || '[]');
-let bookmarks = JSON.parse(localStorage.getItem('foodBookmarks') || '[]');
-
+// --- DOM Elements ---
+const mainTabBtns = document.querySelectorAll('.main-tabs .tab-btn');
+const subTabsContainer = document.getElementById('subTabs');
+const subTabBtns = document.querySelectorAll('.sub-tab-btn');
+const tabSlider = document.querySelector('.tab-slider');
+const recommendBtn = document.getElementById('recommendBtn');
+const resultCard = document.getElementById('resultCard');
+const resultPlaceholder = resultCard.querySelector('.result-placeholder');
+const loadingContainer = document.getElementById('loadingContainer');
+const resultContent = document.getElementById('resultContent');
+const resultMainTag = document.getElementById('resultMainTag');
+const resultSubTag = document.getElementById('resultSubTag');
+const resultMenu = document.getElementById('resultMenu');
+const resultEmoji = document.getElementById('resultEmoji');
+const naverSearchBtn = document.getElementById('naverSearchBtn');
+const bookmarkBtn = document.getElementById('bookmarkBtn');
 const historyList = document.getElementById('historyList');
 const bookmarkList = document.getElementById('bookmarkList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-const bookmarkBtn = document.getElementById('bookmarkBtn');
 
-// 공통 맛집 검색창 열기 함수
-function openNaver(name) {
-    window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(name + ' 맛집')}`, '_blank');
-}
+// --- State ---
+let currentMain = 'lunch';
+let currentSub = 'all';
+let foodHistory = JSON.parse(localStorage.getItem('foodHistory') || '[]');
+let bookmarks = JSON.parse(localStorage.getItem('foodBookmarks') || '[]');
 
-// 히스토리 렌더링
+// --- Global Functions (Explicitly attached to window for HTML inline calls) ---
+window.openNaver = function(name) {
+    const query = encodeURIComponent(name + ' 맛집');
+    window.open(`https://search.naver.com/search.naver?query=${query}`, '_blank');
+};
+
+window.toggleBookmark = function(name, emoji) {
+    const index = bookmarks.findIndex(b => b.name === name);
+    if (index > -1) {
+        bookmarks.splice(index, 1);
+        if (resultMenu.textContent === name) bookmarkBtn.textContent = '🤍';
+    } else {
+        bookmarks.push({ name, emoji });
+        if (resultMenu.textContent === name) bookmarkBtn.textContent = '❤️';
+    }
+    localStorage.setItem('foodBookmarks', JSON.stringify(bookmarks));
+    renderBookmarks();
+};
+
+// --- Helper Functions ---
 function renderHistory() {
     historyList.innerHTML = '';
     if (foodHistory.length === 0) {
@@ -100,12 +131,11 @@ function renderHistory() {
             <span class="menu-info">${item.emoji} ${item.name}</span>
             <span class="date-info">${item.date}</span>
         `;
-        li.onclick = () => openNaver(item.name);
+        li.onclick = () => window.openNaver(item.name);
         historyList.appendChild(li);
     });
 }
 
-// 북마크 렌더링
 function renderBookmarks() {
     bookmarkList.innerHTML = '';
     if (bookmarks.length === 0) {
@@ -117,25 +147,11 @@ function renderBookmarks() {
         li.className = 'history-item';
         li.innerHTML = `
             <span class="menu-info">${item.emoji} ${item.name}</span>
-            <span class="delete-bookmark" onclick="event.stopPropagation(); toggleBookmark('${item.name}', '${item.emoji}')">제거</span>
+            <span class="delete-bookmark" onclick="event.stopPropagation(); window.toggleBookmark('${item.name}', '${item.emoji}')">제거</span>
         `;
-        li.onclick = () => openNaver(item.name);
+        li.onclick = () => window.openNaver(item.name);
         bookmarkList.appendChild(li);
     });
-}
-
-// 북마크 토글
-function toggleBookmark(name, emoji) {
-    const index = bookmarks.findIndex(b => b.name === name);
-    if (index > -1) {
-        bookmarks.splice(index, 1);
-        if (resultMenu.textContent === name) bookmarkBtn.textContent = '🤍';
-    } else {
-        bookmarks.push({ name, emoji });
-        if (resultMenu.textContent === name) bookmarkBtn.textContent = '❤️';
-    }
-    localStorage.setItem('foodBookmarks', JSON.stringify(bookmarks));
-    renderBookmarks();
 }
 
 function saveToHistory(name, emoji) {
@@ -147,36 +163,29 @@ function saveToHistory(name, emoji) {
     renderHistory();
 }
 
-// --- App Logic ---
-let currentMain = 'lunch';
-let currentSub = 'all';
+function resetResult() {
+    resultPlaceholder.classList.remove('hidden');
+    resultContent.classList.add('hidden');
+    loadingContainer.classList.add('hidden');
+    resultCard.classList.remove('active');
+    recommendBtn.textContent = '메뉴 추천받기!';
+    recommendBtn.disabled = false;
+}
 
-const mainTabBtns = document.querySelectorAll('.main-tabs .tab-btn');
-const subTabsContainer = document.getElementById('subTabs');
-const subTabBtns = document.querySelectorAll('.sub-tab-btn');
-const tabSlider = document.querySelector('.tab-slider');
-const recommendBtn = document.getElementById('recommendBtn');
-const resultCard = document.getElementById('resultCard');
-const resultPlaceholder = resultCard.querySelector('.result-placeholder');
-const loadingContainer = document.getElementById('loadingContainer');
-const resultContent = document.getElementById('resultContent');
-const resultMainTag = document.getElementById('resultMainTag');
-const resultSubTag = document.getElementById('resultSubTag');
-const resultMenu = document.getElementById('resultMenu');
-const resultEmoji = document.getElementById('resultEmoji');
-const naverSearchBtn = document.getElementById('naverSearchBtn');
-
-// 초기 렌더링
-renderHistory();
-renderBookmarks();
-
+// --- Event Listeners ---
 mainTabBtns.forEach((btn, index) => {
     btn.addEventListener('click', () => {
         mainTabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         tabSlider.style.transform = `translateX(${index * 100}%)`;
         currentMain = btn.dataset.category;
-        currentMain === 'dessert' ? subTabsContainer.classList.add('hidden') : subTabsContainer.classList.remove('hidden');
+        
+        if (currentMain === 'dessert') {
+            subTabsContainer.style.display = 'none';
+        } else {
+            subTabsContainer.style.display = 'flex';
+        }
+        
         resetResult();
     });
 });
@@ -190,14 +199,6 @@ subTabBtns.forEach(btn => {
     });
 });
 
-function resetResult() {
-    resultPlaceholder.classList.remove('hidden');
-    resultContent.classList.add('hidden');
-    loadingContainer.classList.add('hidden');
-    resultCard.classList.remove('active');
-    recommendBtn.textContent = '메뉴 추천받기!';
-}
-
 const mainLabels = { lunch: '점심 추천', dinner: '저녁 추천', lateNight: '야식 추천', dessert: '디저트 추천' };
 const subLabels = { korean: '한식', japanese: '일식', chinese: '중식', western: '양식', others: '기타', all: '전체' };
 
@@ -207,6 +208,7 @@ recommendBtn.addEventListener('click', () => {
     loadingContainer.classList.remove('hidden');
     resultCard.classList.remove('active');
     recommendBtn.disabled = true;
+    recommendBtn.textContent = '메뉴 고르는 중...';
 
     setTimeout(() => {
         let pool = [];
@@ -217,8 +219,19 @@ recommendBtn.addEventListener('click', () => {
             finalSubLabel = '달콤한 디저트';
         } else {
             const mainData = menus[currentMain];
-            pool = currentSub === 'all' ? Object.values(mainData).flat() : mainData[currentSub];
-            finalSubLabel = subLabels[currentSub];
+            if (currentSub === 'all') {
+                pool = Object.values(mainData).flat();
+                finalSubLabel = '다양한 장르';
+            } else {
+                pool = mainData[currentSub];
+                finalSubLabel = subLabels[currentSub];
+            }
+        }
+
+        if (!pool || pool.length === 0) {
+            alert('해당 카테고리에 메뉴가 없습니다.');
+            resetResult();
+            return;
         }
 
         const randomMenu = pool[Math.floor(Math.random() * pool.length)];
@@ -244,9 +257,8 @@ recommendBtn.addEventListener('click', () => {
     }, 800);
 });
 
-// 하트 버튼 클릭 이벤트
 bookmarkBtn.addEventListener('click', () => {
-    toggleBookmark(resultMenu.textContent, resultEmoji.textContent);
+    window.toggleBookmark(resultMenu.textContent, resultEmoji.textContent);
 });
 
 clearHistoryBtn.addEventListener('click', () => {
@@ -256,3 +268,7 @@ clearHistoryBtn.addEventListener('click', () => {
         renderHistory();
     }
 });
+
+// --- Initial Setup ---
+renderHistory();
+renderBookmarks();
