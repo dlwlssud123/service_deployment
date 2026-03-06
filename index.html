@@ -26,7 +26,7 @@
                 <div class="tab-slider"></div>
             </div>
 
-            <!-- 서브 카테고리 (디저트 제외하고 표시) -->
+            <!-- 서브 카테고리 -->
             <div class="sub-category-tabs" id="subTabs">
                 <button class="sub-tab-btn active" data-sub="all">전체</button>
                 <button class="sub-tab-btn" data-sub="korean">한식</button>
@@ -48,6 +48,7 @@
                     <div class="tag-group">
                         <span class="category-tag main-tag" id="resultMainTag"></span>
                         <span class="category-tag sub-tag" id="resultSubTag"></span>
+                        <button id="bookmarkBtn" class="bookmark-btn">🤍</button>
                     </div>
                     <h2 id="resultMenu">제육볶음</h2>
                     <p id="resultEmoji">🍱</p>
@@ -59,11 +60,17 @@
                 <button id="recommendBtn" class="main-btn">메뉴 추천받기!</button>
             </div>
 
-            <!-- 추천 히스토리 세션 -->
+            <!-- 추천 히스토리 섹션 -->
             <div class="history-section">
                 <h3>🕒 최근 추천 기록</h3>
                 <ul id="historyList"></ul>
                 <button id="clearHistoryBtn" class="clear-btn">기록 전체 삭제</button>
+            </div>
+
+            <!-- 즐겨찾기 섹션 -->
+            <div class="history-section bookmarks-section">
+                <h3>⭐ 즐겨찾는 메뉴</h3>
+                <ul id="bookmarkList"></ul>
             </div>
         </main>
 

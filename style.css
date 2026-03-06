@@ -167,6 +167,7 @@ header p {
 .tag-group {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 8px;
     margin-bottom: 15px;
 }
@@ -187,6 +188,20 @@ header p {
 .sub-tag {
     background: #e6fcf5;
     color: var(--secondary-color);
+}
+
+.bookmark-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 0 5px;
+    line-height: 1;
+}
+
+.bookmark-btn:hover {
+    transform: scale(1.2);
 }
 
 #resultMenu {
@@ -234,10 +249,6 @@ header p {
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.main-btn:hover {
-    transform: scale(1.02);
-}
-
 /* 히스토리 섹션 스타일 */
 .history-section {
     margin-top: 40px;
@@ -247,13 +258,18 @@ header p {
     border-radius: 24px;
 }
 
+.bookmarks-section {
+    margin-top: 20px;
+    background: #fffbe6;
+}
+
 .history-section h3 {
     font-size: 0.95rem;
     color: #495057;
     margin-bottom: 15px;
 }
 
-#historyList {
+#historyList, #bookmarkList {
     list-style: none;
     padding: 0;
     margin-bottom: 15px;
@@ -269,6 +285,13 @@ header p {
     margin-bottom: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     animation: slideIn 0.3s ease-out;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.history-item:hover {
+    background: #f1f3f5;
+    transform: translateX(5px);
 }
 
 .history-item .menu-info {
@@ -280,6 +303,16 @@ header p {
 .history-item .date-info {
     font-size: 0.75rem;
     color: #adb5bd;
+}
+
+.delete-bookmark {
+    color: #adb5bd;
+    font-size: 0.8rem;
+    padding: 5px;
+}
+
+.delete-bookmark:hover {
+    color: #ff6b6b;
 }
 
 .clear-btn {
