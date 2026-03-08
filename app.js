@@ -188,38 +188,71 @@ function resetResult() {
 
 // app.js의 recommendBtn 클릭 이벤트 부분을 아래 코드로 통째로 교체
 recommendBtn.addEventListener('click', () => {
+    // 1. 데이터 풀(Pool) 준비
+    let pool = [];
     const mainData = menus[currentMain];
-    let pool = (currentMain === 'dessert') ? menus.dessert : 
-               (currentSub === 'all' ? Object.values(mainData).flat() : mainData[currentSub]);
-
+    if (currentMain === 'dessert') {
+        pool = menus.dessert;
+    } else {
+        pool = currentSub === 'all' ? Object.values(mainData).flat() : mainData[currentSub];
+    }
     if (!pool || pool.length === 0) return;
 
-    // UI 초기화 및 준비
+    // 2. UI 초기 상태 설정 (카드는 유지하되 내부 요소만 조절)
     resultPlaceholder.classList.add('hidden');
-    resultContent.classList.remove('hidden'); // 셔플을 보여줘야 하므로 바로 보여줌
+    loadingContainer.classList.add('hidden'); // 스피너는 안 써도 돼
+    resultContent.classList.remove('hidden'); // 카드는 계속 보여줌
+    resultCard.classList.add('active');
     recommendBtn.disabled = true;
     recommendBtn.textContent = '고르는 중...';
-    
-    // 이모지와 하트, 버튼은 잠시 숨김
-    resultEmoji.style.visibility = 'hidden';
-    bookmarkBtn.style.visibility = 'hidden';
+
+    // 결과 확정 전까지 검색 버튼과 하트, 이모지는 숨김 처리 (깔끔하게!)
     naverSearchBtn.style.visibility = 'hidden';
+    bookmarkBtn.style.visibility = 'hidden';
+    resultEmoji.style.visibility = 'hidden';
+    resultMenu.classList.add('shuffling'); // 셔플 애니메이션 클래스 추가
 
     let shuffleCount = 0;
-    const maxShuffle = 15; // 셔플 횟수 (약 1.5초)
+    const maxShuffle = 12; // 셔플 횟수
 
-    // 셔플 애니메이션 시작
+    // 3. 룰렛(셔플) 시작
     const shuffleInterval = setInterval(() => {
         const tempMenu = pool[Math.floor(Math.random() * pool.length)];
         resultMenu.textContent = tempMenu.name;
-        resultMenu.classList.add('shuffling');
         shuffleCount++;
 
+        // 셔플이 끝나면 최종 결과 확정
         if (shuffleCount >= maxShuffle) {
             clearInterval(shuffleInterval);
-            finalizeSelection(pool);
+            
+            const randomMenu = pool[Math.floor(Math.random() * pool.length)];
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // 최종 데이터 업데이트
+            resultMenu.textContent = randomMenu.name;
+            resultEmoji.textContent = randomMenu.emoji;
+            resultMainTag.textContent = currentMain === 'lunch' ? '점심' : currentMain === 'dinner' ? '저녁' : currentMain === 'lateNight' ? '야식' : '디저트';
+            resultSubTag.textContent = currentSub === 'all' ? '전체' : currentSub;
+
+            const isBookmarked = bookmarks.some(b => b.name === randomMenu.name);
+            bookmarkBtn.textContent = isBookmarked ? '❤️' : '🤍';
+            naverSearchBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(randomMenu.name + ' 맛집')}`;
+
+            // 히스토리 저장
+            foodHistory.unshift({ name: randomMenu.name, emoji: randomMenu.emoji, date: timeStr });
+            if (foodHistory.length > 10) foodHistory.pop();
+            updateStorage('foodHistory', foodHistory);
+
+            // 숨겼던 요소들 다시 등장
+            resultMenu.classList.remove('shuffling');
+            resultEmoji.style.visibility = 'visible';
+            bookmarkBtn.style.visibility = 'visible';
+            naverSearchBtn.style.visibility = 'visible';
+            
+            recommendBtn.disabled = false;
+            recommendBtn.textContent = '다른 메뉴 보기';
         }
-    }, 100); // 0.1초마다 메뉴 변경
+    }, 100); // 0.1초마다 이름 변경
 });
 
 // 최종 메뉴 확정 및 UI 업데이트 함수

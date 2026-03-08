@@ -66,3 +66,16 @@ body {
     from { filter: blur(0px); transform: scale(1); }
     to { filter: blur(2px); transform: scale(1.05); }
 }
+
+/* 글자가 셔플될 때의 효과 */
+.shuffling {
+    color: var(--primary-color);
+    filter: blur(1px);
+    transform: scale(1.05);
+    transition: all 0.1s;
+}
+
+/* 카드가 갑자기 작아지지 않게 최소 높이 유지 */
+.result-card {
+    min-height: 280px; /* 기존보다 조금 더 넉넉하게 잡으면 안정적이야 */
+}
