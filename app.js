@@ -70,6 +70,22 @@ const menus = {
     ]
 };
 
+const categoryLabels = {
+    lunch: '점심',
+    dinner: '저녁',
+    lateNight: '야식',
+    dessert: '디저트'
+};
+
+const subCategoryLabels = {
+    all: '전체',
+    korean: '한식',
+    japanese: '일식',
+    chinese: '중식',
+    western: '양식',
+    others: '기타'
+};
+
 // --- DOM Elements ---
 const mainTabBtns = document.querySelectorAll('.main-tabs .tab-btn');
 const subTabsContainer = document.getElementById('subTabs');
@@ -98,13 +114,12 @@ const clearBtn = document.getElementById('clearBtn');
 // --- State ---
 let currentMain = 'lunch';
 let currentSub = 'all';
-let currentListView = 'history'; // 'history' or 'bookmark'
+let currentListView = 'history';
 
 let foodHistory = JSON.parse(localStorage.getItem('foodHistory') || '[]');
 let bookmarks = JSON.parse(localStorage.getItem('foodBookmarks') || '[]');
 
 // --- Functions ---
-
 function updateStorage(key, data) {
     localStorage.setItem(key, JSON.stringify(data));
 }
@@ -123,7 +138,7 @@ function renderList() {
         return;
     }
 
-    data.forEach((item, index) => {
+    data.forEach((item) => {
         const li = document.createElement('li');
         li.className = 'history-item';
         li.innerHTML = `
@@ -142,28 +157,41 @@ function toggleList(view) {
     listOverlay.classList.remove('hidden');
 }
 
+function updateBookmarkBtn(isBookmarked) {
+    bookmarkBtn.textContent = isBookmarked ? '❤️' : '🤍';
+    bookmarkBtn.classList.toggle('active', isBookmarked);
+}
+
 function toggleBookmark(name, emoji) {
     const index = bookmarks.findIndex(b => b.name === name);
     if (index > -1) {
         bookmarks.splice(index, 1);
-        bookmarkBtn.textContent = '🤍';
+        updateBookmarkBtn(false);
     } else {
-        if (bookmarks.length >= 10) bookmarks.pop(); // 최대 10개 제한
+        if (bookmarks.length >= 20) bookmarks.pop();
         bookmarks.unshift({ name, emoji, date: '북마크됨' });
-        bookmarkBtn.textContent = '❤️';
+        updateBookmarkBtn(true);
     }
     updateStorage('foodBookmarks', bookmarks);
 }
 
-// --- Events ---
+function resetResult() {
+    resultPlaceholder.classList.remove('hidden');
+    resultContent.classList.add('hidden');
+    loadingContainer.classList.add('hidden');
+    resultCard.classList.remove('active');
+    recommendBtn.textContent = '메뉴 추천받기!';
+    recommendBtn.disabled = false;
+}
 
+// --- Events ---
 mainTabBtns.forEach((btn, index) => {
     btn.addEventListener('click', () => {
         mainTabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         tabSlider.style.transform = `translateX(${index * 100}%)`;
         currentMain = btn.dataset.category;
-        subTabsContainer.style.display = currentMain === 'dessert' ? 'none' : 'flex';
+        subTabsContainer.classList.toggle('hidden', currentMain === 'dessert');
         resetResult();
     });
 });
@@ -177,73 +205,54 @@ subTabBtns.forEach(btn => {
     });
 });
 
-function resetResult() {
-    resultPlaceholder.classList.remove('hidden');
-    resultContent.classList.add('hidden');
-    loadingContainer.classList.add('hidden');
-    resultCard.classList.remove('active');
-    recommendBtn.textContent = '메뉴 추천받기!';
-    recommendBtn.disabled = false;
-}
-
-// app.js의 recommendBtn 클릭 이벤트 부분을 아래 코드로 통째로 교체
 recommendBtn.addEventListener('click', () => {
-    // 1. 데이터 풀(Pool) 준비
     let pool = [];
-    const mainData = menus[currentMain];
     if (currentMain === 'dessert') {
         pool = menus.dessert;
     } else {
+        const mainData = menus[currentMain];
         pool = currentSub === 'all' ? Object.values(mainData).flat() : mainData[currentSub];
     }
     if (!pool || pool.length === 0) return;
 
-    // 2. UI 초기 상태 설정 (카드는 유지하되 내부 요소만 조절)
     resultPlaceholder.classList.add('hidden');
-    loadingContainer.classList.add('hidden'); // 스피너는 안 써도 돼
-    resultContent.classList.remove('hidden'); // 카드는 계속 보여줌
+    resultContent.classList.remove('hidden');
     resultCard.classList.add('active');
     recommendBtn.disabled = true;
     recommendBtn.textContent = '고르는 중...';
 
-    // 결과 확정 전까지 검색 버튼과 하트, 이모지는 숨김 처리 (깔끔하게!)
     naverSearchBtn.style.visibility = 'hidden';
     bookmarkBtn.style.visibility = 'hidden';
     resultEmoji.style.visibility = 'hidden';
-    resultMenu.classList.add('shuffling'); // 셔플 애니메이션 클래스 추가
+    resultMenu.classList.add('shuffling');
 
     let shuffleCount = 0;
-    const maxShuffle = 12; // 셔플 횟수
+    const maxShuffle = 12;
 
-    // 3. 룰렛(셔플) 시작
     const shuffleInterval = setInterval(() => {
         const tempMenu = pool[Math.floor(Math.random() * pool.length)];
         resultMenu.textContent = tempMenu.name;
         shuffleCount++;
 
-        // 셔플이 끝나면 최종 결과 확정
         if (shuffleCount >= maxShuffle) {
             clearInterval(shuffleInterval);
             
             const randomMenu = pool[Math.floor(Math.random() * pool.length)];
             const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            // 최종 데이터 업데이트
             resultMenu.textContent = randomMenu.name;
             resultEmoji.textContent = randomMenu.emoji;
-            resultMainTag.textContent = currentMain === 'lunch' ? '점심' : currentMain === 'dinner' ? '저녁' : currentMain === 'lateNight' ? '야식' : '디저트';
-            resultSubTag.textContent = currentSub === 'all' ? '전체' : currentSub;
+            resultMainTag.textContent = categoryLabels[currentMain];
+            resultSubTag.textContent = currentMain === 'dessert' ? '디저트' : subCategoryLabels[currentSub];
 
             const isBookmarked = bookmarks.some(b => b.name === randomMenu.name);
-            bookmarkBtn.textContent = isBookmarked ? '❤️' : '🤍';
+            updateBookmarkBtn(isBookmarked);
             naverSearchBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(randomMenu.name + ' 맛집')}`;
 
-            // 히스토리 저장
             foodHistory.unshift({ name: randomMenu.name, emoji: randomMenu.emoji, date: timeStr });
-            if (foodHistory.length > 10) foodHistory.pop();
+            if (foodHistory.length > 20) foodHistory.pop();
             updateStorage('foodHistory', foodHistory);
 
-            // 숨겼던 요소들 다시 등장
             resultMenu.classList.remove('shuffling');
             resultEmoji.style.visibility = 'visible';
             bookmarkBtn.style.visibility = 'visible';
@@ -252,40 +261,8 @@ recommendBtn.addEventListener('click', () => {
             recommendBtn.disabled = false;
             recommendBtn.textContent = '다른 메뉴 보기';
         }
-    }, 100); // 0.1초마다 이름 변경
+    }, 100);
 });
-
-// 최종 메뉴 확정 및 UI 업데이트 함수
-function finalizeSelection(pool) {
-    const randomMenu = pool[Math.floor(Math.random() * pool.length)];
-    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    // 셔플 효과 제거 및 최종 값 세팅
-    resultMenu.classList.remove('shuffling');
-    resultMenu.textContent = randomMenu.name;
-    resultEmoji.textContent = randomMenu.emoji;
-    resultEmoji.style.visibility = 'visible';
-    bookmarkBtn.style.visibility = 'visible';
-    naverSearchBtn.style.visibility = 'visible';
-
-    // 태그 업데이트
-    resultMainTag.textContent = currentMain;
-    resultSubTag.textContent = currentSub === 'all' ? '전체' : currentSub;
-
-    // 히스토리 저장 및 북마크 체크
-    foodHistory.unshift({ name: randomMenu.name, emoji: randomMenu.emoji, date: timeStr });
-    if (foodHistory.length > 10) foodHistory.pop();
-    updateStorage('foodHistory', foodHistory);
-
-    const isBookmarked = bookmarks.some(b => b.name === randomMenu.name);
-    updateBookmarkUI(isBookmarked);
-
-    naverSearchBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(randomMenu.name + ' 맛집')}`;
-    
-    resultCard.classList.add('active');
-    recommendBtn.disabled = false;
-    recommendBtn.textContent = '다른 메뉴 보기';
-}
 
 bookmarkBtn.addEventListener('click', () => {
     toggleBookmark(resultMenu.textContent, resultEmoji.textContent);
@@ -303,13 +280,12 @@ clearBtn.addEventListener('click', () => {
         } else {
             bookmarks = [];
             updateStorage('foodBookmarks', []);
-            bookmarkBtn.textContent = '🤍';
+            updateBookmarkBtn(false);
         }
         renderList();
     }
 });
 
-// 외부 클릭 시 닫기
 window.onclick = (event) => {
     if (event.target == listOverlay) listOverlay.classList.add('hidden');
 };
