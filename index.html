@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>오늘 뭐 먹지? | 맞춤형 메뉴 추천</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -17,7 +16,6 @@
         </header>
 
         <main>
-            <!-- 메인 카테고리 -->
             <div class="category-tabs main-tabs">
                 <button class="tab-btn active" data-category="lunch">점메추</button>
                 <button class="tab-btn" data-category="dinner">저메추</button>
@@ -26,7 +24,6 @@
                 <div class="tab-slider"></div>
             </div>
 
-            <!-- 서브 카테고리 -->
             <div class="sub-category-tabs" id="subTabs">
                 <button class="sub-tab-btn active" data-sub="all">전체</button>
                 <button class="sub-tab-btn" data-sub="korean">한식</button>
@@ -38,20 +35,18 @@
 
             <div class="result-card" id="resultCard">
                 <div class="result-placeholder">시간대와 음식 종류를 고르고<br>버튼을 눌러보세요!</div>
-                
                 <div class="loading-container hidden" id="loadingContainer">
                     <div class="spinner"></div>
                     <p class="loading-text">취향 저격 메뉴 고르는 중...</p>
                 </div>
-
                 <div class="result-content hidden" id="resultContent">
                     <div class="tag-group">
                         <span class="category-tag main-tag" id="resultMainTag"></span>
                         <span class="category-tag sub-tag" id="resultSubTag"></span>
                         <button id="bookmarkBtn" class="bookmark-btn">🤍</button>
                     </div>
-                    <h2 id="resultMenu">제육볶음</h2>
-                    <p id="resultEmoji">🍱</p>
+                    <h2 id="resultMenu"></h2>
+                    <p id="resultEmoji"></p>
                     <a id="naverSearchBtn" class="sub-btn" target="_blank">네이버에서 맛집 찾기 🔍</a>
                 </div>
             </div>
@@ -64,21 +59,15 @@
                 </div>
             </div>
 
-            <!-- 리스트 오버레이 (모달) -->
             <div id="listOverlay" class="list-overlay hidden">
                 <div class="list-container">
-                    <div class="list-header">
-                        <h3 id="listTitle">리스트 제목</h3>
-                        <button id="closeListBtn" class="close-btn">×</button>
-                    </div>
                     <ul id="displayList"></ul>
-                    <button id="clearBtn" class="clear-btn">전체 삭제</button>
                 </div>
             </div>
         </main>
 
         <footer>
-            <p>© 2026 메뉴 추천 전문가 | 2단계 필터링 버전</p>
+            <p>© 2026 메뉴 추천 전문가</p>
         </footer>
     </div>
     <script src="app.js"></script>

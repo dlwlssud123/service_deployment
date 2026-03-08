@@ -186,49 +186,73 @@ function resetResult() {
     recommendBtn.disabled = false;
 }
 
+// app.js의 recommendBtn 클릭 이벤트 부분을 아래 코드로 통째로 교체
 recommendBtn.addEventListener('click', () => {
+    const mainData = menus[currentMain];
+    let pool = (currentMain === 'dessert') ? menus.dessert : 
+               (currentSub === 'all' ? Object.values(mainData).flat() : mainData[currentSub]);
+
+    if (!pool || pool.length === 0) return;
+
+    // UI 초기화 및 준비
     resultPlaceholder.classList.add('hidden');
-    resultContent.classList.add('hidden');
-    loadingContainer.classList.remove('hidden');
-    resultCard.classList.remove('active');
+    resultContent.classList.remove('hidden'); // 셔플을 보여줘야 하므로 바로 보여줌
     recommendBtn.disabled = true;
+    recommendBtn.textContent = '고르는 중...';
+    
+    // 이모지와 하트, 버튼은 잠시 숨김
+    resultEmoji.style.visibility = 'hidden';
+    bookmarkBtn.style.visibility = 'hidden';
+    naverSearchBtn.style.visibility = 'hidden';
 
-    setTimeout(() => {
-        let pool = [];
-        const mainData = menus[currentMain];
-        
-        if (currentMain === 'dessert') {
-            pool = menus.dessert;
-        } else {
-            pool = currentSub === 'all' ? Object.values(mainData).flat() : mainData[currentSub];
+    let shuffleCount = 0;
+    const maxShuffle = 15; // 셔플 횟수 (약 1.5초)
+
+    // 셔플 애니메이션 시작
+    const shuffleInterval = setInterval(() => {
+        const tempMenu = pool[Math.floor(Math.random() * pool.length)];
+        resultMenu.textContent = tempMenu.name;
+        resultMenu.classList.add('shuffling');
+        shuffleCount++;
+
+        if (shuffleCount >= maxShuffle) {
+            clearInterval(shuffleInterval);
+            finalizeSelection(pool);
         }
-
-        const randomMenu = pool[Math.floor(Math.random() * pool.length)];
-        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        // 데이터 업데이트
-        foodHistory.unshift({ name: randomMenu.name, emoji: randomMenu.emoji, date: timeStr });
-        if (foodHistory.length > 10) foodHistory.pop(); // 최대 10개 제한
-        updateStorage('foodHistory', foodHistory);
-
-        // UI 업데이트
-        resultMainTag.textContent = currentMain === 'lunch' ? '점심' : currentMain === 'dinner' ? '저녁' : currentMain === 'lateNight' ? '야식' : '디저트';
-        resultSubTag.textContent = currentSub === 'all' ? '전체' : currentSub;
-        resultMenu.textContent = randomMenu.name;
-        resultEmoji.textContent = randomMenu.emoji;
-        
-        const isBookmarked = bookmarks.some(b => b.name === randomMenu.name);
-        bookmarkBtn.textContent = isBookmarked ? '❤️' : '🤍';
-        
-        naverSearchBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(randomMenu.name + ' 맛집')}`;
-
-        loadingContainer.classList.add('hidden');
-        resultContent.classList.remove('hidden');
-        resultCard.classList.add('active');
-        recommendBtn.disabled = false;
-        recommendBtn.textContent = '다른 메뉴 보기';
-    }, 800);
+    }, 100); // 0.1초마다 메뉴 변경
 });
+
+// 최종 메뉴 확정 및 UI 업데이트 함수
+function finalizeSelection(pool) {
+    const randomMenu = pool[Math.floor(Math.random() * pool.length)];
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // 셔플 효과 제거 및 최종 값 세팅
+    resultMenu.classList.remove('shuffling');
+    resultMenu.textContent = randomMenu.name;
+    resultEmoji.textContent = randomMenu.emoji;
+    resultEmoji.style.visibility = 'visible';
+    bookmarkBtn.style.visibility = 'visible';
+    naverSearchBtn.style.visibility = 'visible';
+
+    // 태그 업데이트
+    resultMainTag.textContent = currentMain;
+    resultSubTag.textContent = currentSub === 'all' ? '전체' : currentSub;
+
+    // 히스토리 저장 및 북마크 체크
+    foodHistory.unshift({ name: randomMenu.name, emoji: randomMenu.emoji, date: timeStr });
+    if (foodHistory.length > 10) foodHistory.pop();
+    updateStorage('foodHistory', foodHistory);
+
+    const isBookmarked = bookmarks.some(b => b.name === randomMenu.name);
+    updateBookmarkUI(isBookmarked);
+
+    naverSearchBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(randomMenu.name + ' 맛집')}`;
+    
+    resultCard.classList.add('active');
+    recommendBtn.disabled = false;
+    recommendBtn.textContent = '다른 메뉴 보기';
+}
 
 bookmarkBtn.addEventListener('click', () => {
     toggleBookmark(resultMenu.textContent, resultEmoji.textContent);
