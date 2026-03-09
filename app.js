@@ -235,32 +235,20 @@ recommendBtn.addEventListener('click', () => {
         shuffleCount++;
 
         if (shuffleCount >= maxShuffle) {
-            clearInterval(shuffleInterval);
-            
-            const randomMenu = pool[Math.floor(Math.random() * pool.length)];
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            resultMenu.textContent = randomMenu.name;
-            resultEmoji.textContent = randomMenu.emoji;
-            resultMainTag.textContent = categoryLabels[currentMain];
-            resultSubTag.textContent = currentMain === 'dessert' ? '디저트' : subCategoryLabels[currentSub];
-
-            const isBookmarked = bookmarks.some(b => b.name === randomMenu.name);
-            updateBookmarkBtn(isBookmarked);
-            naverSearchBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(randomMenu.name + ' 맛집')}`;
-
-            foodHistory.unshift({ name: randomMenu.name, emoji: randomMenu.emoji, date: timeStr });
-            if (foodHistory.length > 20) foodHistory.pop();
-            updateStorage('foodHistory', foodHistory);
-
-            resultMenu.classList.remove('shuffling');
-            resultEmoji.style.visibility = 'visible';
-            bookmarkBtn.style.visibility = 'visible';
-            naverSearchBtn.style.visibility = 'visible';
-            
-            recommendBtn.disabled = false;
-            recommendBtn.textContent = '다른 메뉴 보기';
-        }
+        clearInterval(shuffleInterval);
+        
+        // 최종 결과 노출
+        resultMenu.classList.remove('shuffling');
+        
+        // 버튼과 이모지를 서서히 나타나게 함
+        resultEmoji.style.visibility = 'visible';
+        bookmarkBtn.style.visibility = 'visible';
+        naverSearchBtn.style.visibility = 'visible';
+        
+        // 버튼 텍스트 복구
+        recommendBtn.disabled = false;
+        recommendBtn.textContent = '다른 메뉴 보기';
+    }
     }, 100);
 });
 
