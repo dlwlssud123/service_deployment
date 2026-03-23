@@ -239,6 +239,31 @@ recommendBtn.addEventListener('click', () => {
         
         // 최종 결과 노출
         resultMenu.classList.remove('shuffling');
+
+        // 최근 추천 히스토리 저장
+        const dateStr = new Date().toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        if(foodHistory.length >= 20) foodHistory.pop();
+        foodHistory.unshift({ name: tempMenu.name, emoji: tempMenu.emoji, date: dateStr });
+        updateStorage('foodHistory', foodHistory);
+
+        // 태그 업데이트
+        resultMainTag.textContent = categoryLabels[currentMain];
+        resultSubTag.textContent = currentMain === 'dessert' ? '' : subCategoryLabels[currentSub];
+        if (currentMain === 'dessert') {
+            resultSubTag.style.display = 'none';
+        } else {
+            resultSubTag.style.display = 'inline-block';
+        }
+
+        // GA4 이벤트 로깅 - 사용자가 선호하는 카테고리/메뉴 추적
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'recommendation_success', {
+                'event_category': 'Menu Recommendation',
+                'event_label': tempMenu.name,
+                'time_category': currentMain,
+                'food_type': currentSub
+            });
+        }
         
         // 버튼과 이모지를 서서히 나타나게 함
         resultEmoji.style.visibility = 'visible';
