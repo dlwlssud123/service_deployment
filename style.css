@@ -148,23 +148,46 @@ footer {
     transform: translateY(0);
 }
 
-/* 방대한 텍스트 콘텐츠(SEO) 영역 스타일 */
+/* 방대한 텍스트 콘텐츠(SEO) 아코디언 컴포넌트 */
 .content-section {
     background: #ffffff;
-    border-radius: 24px;
-    padding: 30px;
-    margin-top: 40px;
+    border-radius: 20px;
+    padding: 20px 25px;
+    margin-top: 30px;
     text-align: left;
     box-shadow: 0 4px 15px rgba(0,0,0,0.03);
     border: 1px solid #f1f3f5;
+    transition: all 0.3s;
 }
 
-.content-section h3 {
-    font-size: 1.1rem;
+.content-section summary {
+    font-size: 1.05rem;
+    font-weight: 700;
     color: var(--primary-color);
+    cursor: pointer;
+    list-style: none; /* Remove default arrow in modern browsers */
+    outline: none;
+    margin: 0;
+}
+
+.content-section summary::-webkit-details-marker {
+    display: none; /* Hide default arrow in WebKit */
+}
+
+/* Expanded state styling */
+.content-section[open] summary {
     margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f1f3f5;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.content-body {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .content-section article {
