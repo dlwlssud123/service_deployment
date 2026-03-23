@@ -100,7 +100,6 @@ const resultMainTag = document.getElementById('resultMainTag');
 const resultSubTag = document.getElementById('resultSubTag');
 const resultMenu = document.getElementById('resultMenu');
 const resultEmoji = document.getElementById('resultEmoji');
-const resultImage = document.getElementById('resultImage'); // 추가된 이미지 요소
 const naverSearchBtn = document.getElementById('naverSearchBtn');
 const bookmarkBtn = document.getElementById('bookmarkBtn');
 
@@ -181,7 +180,6 @@ function resetResult() {
     resultContent.classList.add('hidden');
     loadingContainer.classList.add('hidden');
     resultCard.classList.remove('active');
-    resultImage.classList.add('hidden'); // 결과 초기화 시 숨김
     recommendBtn.textContent = '메뉴 추천받기!';
     recommendBtn.disabled = false;
 }
@@ -226,7 +224,6 @@ recommendBtn.addEventListener('click', () => {
     naverSearchBtn.style.visibility = 'hidden';
     bookmarkBtn.style.visibility = 'hidden';
     resultEmoji.style.visibility = 'hidden';
-    resultImage.classList.add('hidden'); // 룰렛 도는 중 이미지 숨김
     resultMenu.classList.add('shuffling');
 
     let shuffleCount = 0;
@@ -268,11 +265,6 @@ recommendBtn.addEventListener('click', () => {
             });
         }
         
-        // 동적 결과 이미지 채우기 (무료 AI 이미지 생성기 Pollinations 사용)
-        const promptInfo = encodeURIComponent(tempMenu.name + " delicious food plate photography mouthwatering");
-        resultImage.src = `https://image.pollinations.ai/prompt/${promptInfo}?width=400&height=300&nologo=true`;
-        resultImage.classList.remove('hidden'); // 이미지 노출
-
         // 버튼과 이모지를 서서히 나타나게 함
         resultEmoji.style.visibility = 'visible';
         bookmarkBtn.style.visibility = 'visible';
