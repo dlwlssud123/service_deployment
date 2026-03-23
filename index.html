@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 뭐 먹지? | 맞춤형 메뉴 추천</title>
-    <link rel="stylesheet" href="style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title>whattoeat - 오늘 뭐 먹지?</title>
     
-    <!-- Google Analytics 4 (GA4) -->
+    <!-- GA & AdSense -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -16,128 +13,149 @@
       gtag('js', new Date());
       gtag('config', 'G-XXXXXXXXXX');
     </script>
-    
-    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
+        .gradient-text { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+        .shuffling { opacity: 0.7; transform: scale(0.96) !important; filter: blur(1px); }
+        .modal-overlay { background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>오늘 뭐 먹지?</h1>
-            <p>언제, 어떤 음식을 먹고 싶나요?</p>
-        </header>
+<body class="text-slate-800">
 
-        <main>
-            <div class="category-tabs main-tabs">
-                <button class="tab-btn active" data-category="lunch">점메추</button>
-                <button class="tab-btn" data-category="dinner">저메추</button>
-                <button class="tab-btn" data-category="lateNight">야식</button>
-                <button class="tab-btn" data-category="dessert">디저트</button>
-                <div class="tab-slider"></div>
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <h1 class="text-2xl font-extrabold gradient-text tracking-tighter">whattoeat</h1>
+            <div class="flex space-x-1 bg-slate-100 p-1 rounded-xl">
+                <button id="nav-recommend" class="nav-btn px-4 py-1.5 rounded-lg text-sm font-semibold transition-all bg-white text-slate-900 shadow-sm" data-target="recommend-section">추천받기</button>
+                <button id="nav-column" class="nav-btn px-4 py-1.5 rounded-lg text-sm font-semibold transition-all text-slate-500 hover:text-slate-700" data-target="column-section">음식칼럼 (SEO)</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        
+        <!-- Tab 1: Recommendation Section -->
+        <section id="recommend-section" class="tab-content active space-y-8">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl font-bold">결정 장애 해결사 🎲</h2>
+                <p class="text-slate-500">시간대와 음식 카테고리를 골라보세요.</p>
             </div>
 
-            <div class="sub-category-tabs" id="subTabs">
-                <button class="sub-tab-btn active" data-sub="all">전체</button>
-                <button class="sub-tab-btn" data-sub="korean">한식</button>
-                <button class="sub-tab-btn" data-sub="japanese">일식</button>
-                <button class="sub-tab-btn" data-sub="chinese">중식</button>
-                <button class="sub-tab-btn" data-sub="western">양식</button>
-                <button class="sub-tab-btn" data-sub="others">기타</button>
-            </div>
-
-            <div class="result-card" id="resultCard">
-                <div class="result-placeholder">시간대와 음식 종류를 고르고<br>버튼을 눌러보세요!</div>
-                <div class="loading-container hidden" id="loadingContainer">
-                    <div class="spinner"></div>
-                    <p class="loading-text">취향 저격 메뉴 고르는 중...</p>
+            <!-- 1단계: 시간대 -->
+            <div class="space-y-3">
+                <h3 class="text-lg font-bold text-slate-700 px-1">1단계: 언제 드실 건가요? 🕒</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="time-tabs">
+                    <!-- JS Injects Here -->
                 </div>
-                <div class="result-content hidden" id="resultContent">
-                    <div class="tag-group">
-                        <span class="category-tag main-tag" id="resultMainTag"></span>
-                        <span class="category-tag sub-tag" id="resultSubTag"></span>
-                        <button id="bookmarkBtn" class="bookmark-btn">🤍</button>
-                    </div>
-                    <h2 id="resultMenu"></h2>
-                    <p id="resultEmoji"></p>
-                    <a id="naverSearchBtn" class="sub-btn" target="_blank">네이버에서 맛집 찾기 🔍</a>
+            </div>
+
+            <!-- 2단계: 카테고리 -->
+            <div class="space-y-3" id="type-section-container">
+                <h3 class="text-lg font-bold text-slate-700 px-1">2단계: 어떤 종류가 땡기나요? 🥘</h3>
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-2" id="type-tabs">
+                    <!-- JS Injects Here -->
+                </div>
+            </div>
+
+            <!-- 룰렛 & 결과 구역 -->
+            <div class="bg-white rounded-3xl p-8 card-shadow text-center space-y-5">
+                <!-- 결과 태그 -->
+                <div class="flex justify-center items-center space-x-2 h-6" id="result-tags"></div>
+
+                <div class="roulette-container relative h-32 overflow-hidden rounded-xl bg-slate-50 border border-slate-100 flex flex-col items-center justify-center p-4">
+                    <div id="result-emoji" class="text-4xl mb-2 hidden"></div>
+                    <div id="roulette-display" class="text-3xl md:text-4xl font-extrabold text-orange-600 transition-all duration-100">결정하기!</div>
+                </div>
+                
+                <div class="pt-2">
+                    <button id="draw-btn" class="w-full py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-bold text-xl shadow-lg shadow-orange-200 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                        오늘의 메뉴 뽑기
+                    </button>
                     
-                    <!-- 구글 애드센스 광고 단위 하단 배치 -->
-                    <div class="adsense-container" style="margin-top: 25px; width: 100%; text-align: center; min-height: 90px; background: #f8f9fa; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                        <span style="color: #adb5bd; font-size: 0.8rem; display: none;">광고 영역</span>
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                             data-ad-slot="XXXXXXXXXX"
-                             data-ad-format="auto"
-                             data-full-width-responsive="true"></ins>
-                        <script>
-                             (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
+                    <div class="grid grid-cols-2 gap-3 mt-4 hidden" id="action-buttons">
+                        <button id="naver-search-btn" class="py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-md active:scale-95">맛집 검색 🔍</button>
+                        <button id="bookmark-btn" class="py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all border border-slate-200 active:scale-95">즐겨찾기 🤍</button>
                     </div>
                 </div>
             </div>
 
-            <div class="actions">
-                <button id="recommendBtn" class="main-btn">추천받기!</button>
-                <div class="local_storage">
-                    <button id="recommendHistoryBtn" class="sub-btn">추천 히스토리 💾</button>
-                    <button id="bookmarkListBtn" class="sub-btn">북마크 ⭐</button>
-                </div>
+            <!-- History Actions -->
+            <div class="flex flex-wrap justify-center gap-3">
+                <button id="view-history-btn" class="text-sm font-semibold text-slate-500 hover:text-slate-800 transition-all bg-white px-5 py-2.5 rounded-full border border-slate-200 shadow-sm whitespace-nowrap"><i class="fa-solid fa-clock-rotate-left mr-1"></i> 최근 히스토리</button>
+                <button id="view-bookmark-btn" class="text-sm font-semibold text-slate-500 hover:text-slate-800 transition-all bg-white px-5 py-2.5 rounded-full border border-slate-200 shadow-sm whitespace-nowrap"><i class="fa-solid fa-star mr-1"></i> 북마크 모아보기</button>
             </div>
 
-            <div id="listOverlay" class="list-overlay hidden">
-                <div class="list-container">
-                    <div class="list-header">
-                        <h3 id="listTitle">🕒 최근 추천 히스토리</h3>
-                        <div class="list-actions">
-                            <button id="clearBtn" class="text-btn">전체삭제</button>
-                            <button id="closeListBtn" class="close-btn">✕</button>
-                        </div>
+            <!-- AdSense Placeholder -->
+            <div class="w-full h-32 bg-slate-100 rounded-2xl flex items-center justify-center border-2 border-dashed border-slate-300 text-slate-400">
+                <i class="fa-solid fa-rectangle-ad mr-2"></i> 구글 애드센스 자동 광고 영역
+            </div>
+        </section>
+
+        <!-- Tab 2: Column Section -->
+        <section id="column-section" class="tab-content space-y-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold">음식학 개론 📚</h2>
+                    <p class="text-slate-500 text-sm md:text-base">AI가 분석한 맛있는 이야기</p>
+                </div>
+                <button id="gen-col-btn" class="bg-indigo-600 text-white px-3 py-2 md:px-5 md:py-2.5 rounded-xl text-xs md:text-sm font-bold hover:bg-indigo-700 transition-all active:scale-95 whitespace-nowrap ml-2 shadow-sm">
+                    AI 칼럼 쓰기
+                </button>
+            </div>
+
+            <!-- SEO Content Section that AdSense reads -->
+            <div id="column-list" class="grid gap-5">
+                <!-- Preset original column for initial SEO -->
+                <article class="bg-white p-6 rounded-3xl card-shadow border border-slate-50">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-1 rounded-md">HOT</span>
+                        <span class="text-slate-400 text-xs text-medium">기본 매거진</span>
                     </div>
-                    <ul id="displayList"></ul>
-                </div>
+                    <h3 class="text-lg md:text-xl font-bold mb-3">'오늘 뭐 먹지?' 결정장애의 심리학</h3>
+                    <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-4">매일 점심과 저녁, 우리는 엄청난 난제에 부딪힙니다. 심리학에서는 이를 '결정 피로(Decision Fatigue)'라고 부릅니다. 수많은 메뉴와 식당 중에서 나만의 완벽한 한 끼를 선택해야 한다는 압박감은 뇌의 에너지를 빠르게 소모시킵니다. 본 서비스는 옵션을 무작위로 제한하여 현대인의 결정 에너지를 절약합니다.</p>
+                </article>
             </div>
 
-            <!-- 구글 애드센스 승인을 위한 텍스트 콘텐츠 영역 (푸드 칼럼) -->
-            <details class="content-section">
-                <summary>💡 오늘의 메뉴 추천 매거진 (클릭해보기 ▼)</summary>
-                <div class="content-body">
-                    <article>
-                        <h4>'오늘 뭐 먹지?' 결정장애의 심리학</h4>
-                        <p>
-                            매일 점심과 저녁, 우리는 "오늘 뭐 먹지?"라는 엄청난 난제에 부딪힙니다. 심리학에서는 이를 '결정 피로(Decision Fatigue)'라고 부릅니다. 
-                            수많은 메뉴와 식당 중에서 나만의 완벽한 한 끼를 선택해야 한다는 압박감은 뇌의 에너지를 빠르게 소모시킵니다. 
-                            본 '맞춤형 메뉴 추천 서비스'는 사용자의 시간대와 선호하는 음식 종류(한식, 중식, 일식, 양식 등)를 기반으로 최적의 선택지를 무작위로 제공하여, 
-                            여러분의 소중한 결정 에너지를 절약하고 매 순간 즐거운 미식 경험을 할 수 있도록 돕기 위해 개발되었습니다.
-                        </p>
-                    </article>
+            <div id="ai-loading" class="hidden text-center py-10 bg-white rounded-3xl border border-slate-100 card-shadow">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-500 border-t-transparent mb-4"></div>
+                <p class="text-indigo-600 font-bold mb-1">AI 셰프가 맛있는 글을 짓고 있습니다 🍳</p>
+                <p class="text-slate-400 text-sm">약 5~10초 소요됩니다</p>
+            </div>
+        </section>
 
-                    <article>
-                        <h4>건강한 식습관을 위한 시간대별 메뉴 추천 방식</h4>
-                        <p>
-                            <strong>점메추(점심 메뉴 추천):</strong> 활동량이 많은 낮 시간대에는 탄수화물과 단백질이 골고루 섞인 든든한 한식을 추천하거나, 
-                            빠르고 간편하게 에너지를 보충할 수 있는 면류를 제안하여 남은 하루의 활력을 책임집니다. <br>
-                            <strong>저메추(저녁 메뉴 추천):</strong> 하루 일과를 마치고 보상받는 저녁에는 고기류 또는 따뜻한 국물 요리를 배치해 스트레스를 풀 수 있도록 설계했습니다. <br>
-                            <strong>야식 & 디저트:</strong> 늦은 밤 허기를 달래줄 가벼운 간식부터, 식후 달콤함을 책임지는 트렌디한 디저트까지 방대한 데이터베이스를 갖추고 있습니다.
-                        </p>
-                    </article>
+    </main>
 
-                    <article>
-                        <h4>알레르기와 영양성분을 고려한 식단 관리</h4>
-                        <p>
-                            성공적인 메뉴 선택은 단순히 맛있는 것을 고르는 데 그치지 않고, 나의 건강 상태와 다이어트 계획에 부합하는 메뉴를 찾는 과정입니다. 
-                            메뉴를 추천받으신 후 제공되는 '네이버 맛집 검색' 기능을 통해 식당별 원산지 메뉴판이나 영양성분표를 미리 확인하시면 
-                            당뇨, 고혈압, 체중 감량 등에 맞춘 똑똑하고 안전한 외식을 즐기실 수 있습니다. 언제나 다채로운 식단으로 건강한 하루를 만들어 보세요!
-                        </p>
-                    </article>
-                </div>
-            </details>
-        </main>
-
-        <footer>
-            <p>© 2026 메뉴 추천 전문가 | whattoeat.shop</p>
-        </footer>
+    <!-- Modal for History / Bookmark -->
+    <div id="list-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 modal-overlay transition-opacity">
+        <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden card-shadow transform transition-all scale-95 opacity-0" id="modal-box">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-white">
+                <h3 id="modal-title" class="font-bold text-lg text-slate-800">기록</h3>
+                <button id="close-modal-btn" class="text-slate-400 hover:text-red-500 text-2xl font-bold leading-none">&times;</button>
+            </div>
+            <ul id="modal-list" class="max-h-[60vh] overflow-y-auto p-2 space-y-1 bg-slate-50/50">
+                <!-- Items injected here -->
+            </ul>
+            <div class="p-4 border-t border-slate-100 bg-white text-right">
+                <button id="clear-list-btn" class="text-sm font-semibold text-slate-500 hover:text-red-600 px-3 py-1 bg-slate-100 hover:bg-red-50 rounded-lg transition-all">전체 삭제 (초기화)</button>
+            </div>
+        </div>
     </div>
+
+    <footer class="max-w-4xl mx-auto px-4 py-8 border-t border-slate-200 mt-8 text-center text-slate-400 text-sm">
+        <p>© 2026 whattoeat.shop | AI 기반 메뉴 추천 시스템</p>
+        <p class="mt-2 text-xs">프론트엔드: Vanilla JS + Tailwind CSS</p>
+    </footer>
+
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,304 +1,359 @@
 const menus = {
     lunch: {
-        korean: [
-            { name: '김치찌개', emoji: '🥘' }, { name: '된장찌개', emoji: '🍲' }, { name: '비빔밥', emoji: '🥗' },
-            { name: '제육볶음', emoji: '🍛' }, { name: '순대국', emoji: '🍲' }, { name: '칼국수', emoji: '🍜' },
-            { name: '콩나물국밥', emoji: '🥣' }, { name: '육개장', emoji: '🍲' }, { name: '곰탕', emoji: '🍲' }
-        ],
-        japanese: [
-            { name: '돈까스', emoji: '🍱' }, { name: '초밥', emoji: '🍣' }, { name: '우동', emoji: '🍜' },
-            { name: '라멘', emoji: '🍜' }, { name: '규동', emoji: '🍛' }, { name: '가츠동', emoji: '🍛' }
-        ],
-        chinese: [
-            { name: '짜장면', emoji: '🍝' }, { name: '짬뽕', emoji: '🍜' }, { name: '볶음밥', emoji: '🍛' },
-            { name: '마라탕', emoji: '🍜' }
-        ],
-        western: [
-            { name: '햄버거', emoji: '🍔' }, { name: '샌드위치', emoji: '🥪' }, { name: '샐러드', emoji: '🥗' },
-            { name: '파스타', emoji: '🍝' }
-        ],
-        others: [
-            { name: '쌀국수', emoji: '🍜' }, { name: '카레', emoji: '🍛' }, { name: '타코', emoji: '🌮' }
-        ]
+        korean: [{ name: '김치찌개', emoji: '🥘' }, { name: '된장찌개', emoji: '🍲' }, { name: '비빔밥', emoji: '🥗' }, { name: '제육볶음', emoji: '🍛' }, { name: '순대국', emoji: '🍲' }, { name: '칼국수', emoji: '🍜' }, { name: '콩나물국밥', emoji: '🥣' }, { name: '육개장', emoji: '🍲' }, { name: '곰탕', emoji: '🍲' }],
+        japanese: [{ name: '돈까스', emoji: '🍱' }, { name: '초밥', emoji: '🍣' }, { name: '우동', emoji: '🍜' }, { name: '라멘', emoji: '🍜' }, { name: '규동', emoji: '🍛' }, { name: '가츠동', emoji: '🍛' }],
+        chinese: [{ name: '짜장면', emoji: '🍝' }, { name: '짬뽕', emoji: '🍜' }, { name: '볶음밥', emoji: '🍛' }, { name: '마라탕', emoji: '🍜' }],
+        western: [{ name: '햄버거', emoji: '🍔' }, { name: '샌드위치', emoji: '🥪' }, { name: '샐러드', emoji: '🥗' }, { name: '파스타', emoji: '🍝' }],
+        others: [{ name: '쌀국수', emoji: '🍜' }, { name: '카레', emoji: '🍛' }, { name: '타코', emoji: '🌮' }]
     },
     dinner: {
-        korean: [
-            { name: '삼겹살', emoji: '🥓' }, { name: '족발', emoji: '🐷' }, { name: '곱창', emoji: '🔥' },
-            { name: '감자탕', emoji: '🍲' }, { name: '찜닭', emoji: '🍗' }, { name: '보쌈', emoji: '🍱' },
-            { name: '닭볶음탕', emoji: '🥘' }
-        ],
-        japanese: [
-            { name: '회', emoji: '🐟' }, { name: '샤브샤브', emoji: '🍲' }, { name: '스키야키', emoji: '🍲' },
-            { name: '이자카야 안주', emoji: '🍶' }
-        ],
-        chinese: [
-            { name: '탕수육', emoji: '🍗' }, { name: '훠궈', emoji: '🥘' }, { name: '마라상궈', emoji: '🥘' },
-            { name: '양꼬치', emoji: '🍢' }, { name: '유린기', emoji: '🍗' }
-        ],
-        western: [
-            { name: '피자', emoji: '🍕' }, { name: '스테이크', emoji: '🥩' }, { name: '파스타', emoji: '🍝' },
-            { name: '감바스', emoji: '🍤' }
-        ],
-        others: [
-            { name: '똠양꿍', emoji: '🍲' }, { name: '부리또', emoji: '🌯' }, { name: '인도 커리', emoji: '🥘' }
-        ]
+        korean: [{ name: '삼겹살', emoji: '🥓' }, { name: '족발', emoji: '🐷' }, { name: '곱창', emoji: '🔥' }, { name: '감자탕', emoji: '🍲' }, { name: '찜닭', emoji: '🍗' }, { name: '보쌈', emoji: '🍱' }, { name: '닭볶음탕', emoji: '🥘' }],
+        japanese: [{ name: '회', emoji: '🐟' }, { name: '샤브샤브', emoji: '🍲' }, { name: '스키야키', emoji: '🍲' }, { name: '이자카야 안주', emoji: '🍶' }],
+        chinese: [{ name: '탕수육', emoji: '🍗' }, { name: '훠궈', emoji: '🥘' }, { name: '마라상궈', emoji: '🥘' }, { name: '양꼬치', emoji: '🍢' }, { name: '유린기', emoji: '🍗' }],
+        western: [{ name: '피자', emoji: '🍕' }, { name: '스테이크', emoji: '🥩' }, { name: '파스타', emoji: '🍝' }, { name: '감바스', emoji: '🍤' }],
+        others: [{ name: '똠양꿍', emoji: '🍲' }, { name: '부리또', emoji: '🌯' }, { name: '인도 커리', emoji: '🥘' }]
     },
     lateNight: {
-        korean: [
-            { name: '라면', emoji: '🍜' }, { name: '불닭볶음면', emoji: '🔥' }, { name: '야채곱창', emoji: '🥘' },
-            { name: '오돌뼈', emoji: '🦴' }, { name: '닭발', emoji: '🐾' }, { name: '김치전', emoji: '🥞' }
-        ],
-        japanese: [
-            { name: '타코야끼', emoji: '🐙' }, { name: '오코노미야끼', emoji: '🥞' }
-        ],
-        chinese: [
-            { name: '군만두', emoji: '🥟' }, { name: '마라탕', emoji: '🍜' }
-        ],
-        western: [
-            { name: '치킨', emoji: '🍗' }, { name: '나초', emoji: '🌮' }, { name: '소시지', emoji: '🌭' }
-        ],
-        others: [
-            { name: '떡볶이', emoji: '🍢' }, { name: '튀김', emoji: '🍤' }, { name: '순대', emoji: '🍱' }
-        ]
+        korean: [{ name: '라면', emoji: '🍜' }, { name: '불닭볶음면', emoji: '🔥' }, { name: '야채곱창', emoji: '🥘' }, { name: '오돌뼈', emoji: '🦴' }, { name: '닭발', emoji: '🐾' }, { name: '김치전', emoji: '🥞' }],
+        japanese: [{ name: '타코야끼', emoji: '🐙' }, { name: '오코노미야끼', emoji: '🥞' }],
+        chinese: [{ name: '군만두', emoji: '🥟' }, { name: '마라탕', emoji: '🍜' }],
+        western: [{ name: '치킨', emoji: '🍗' }, { name: '나초', emoji: '🌮' }, { name: '소시지', emoji: '🌭' }],
+        others: [{ name: '떡볶이', emoji: '🍢' }, { name: '튀김', emoji: '🍤' }, { name: '순대', emoji: '🍱' }]
     },
     dessert: [
-        { name: '크로플', emoji: '🥐' }, { name: '마카롱', emoji: '🍪' }, { name: '탕후루', emoji: '🍓' },
-        { name: '케이크', emoji: '🍰' }, { name: '빙수', emoji: '🍧' }, { name: '아이스크림', emoji: '🍦' },
-        { name: '푸딩', emoji: '🍮' }, { name: '와플', emoji: '🧇' }, { name: '쿠키', emoji: '🍪' },
-        { name: '베이글', emoji: '🥯' }, { name: '에그타르트', emoji: '🥧' }, { name: '약과', emoji: '🍯' },
+        { name: '크로플', emoji: '🥐' }, { name: '마카롱', emoji: '🍪' }, { name: '탕후루', emoji: '🍓' }, { name: '케이크', emoji: '🍰' }, { name: '빙수', emoji: '🍧' }, { name: '아이스크림', emoji: '🍦' },
+        { name: '푸딩', emoji: '🍮' }, { name: '와플', emoji: '🧇' }, { name: '쿠키', emoji: '🍪' }, { name: '베이글', emoji: '🥯' }, { name: '에그타르트', emoji: '🥧' }, { name: '약과', emoji: '🍯' },
         { name: '붕어빵', emoji: '🐟' }, { name: '호떡', emoji: '🥞' }
     ]
 };
 
-const categoryLabels = {
-    lunch: '점심',
-    dinner: '저녁',
-    lateNight: '야식',
-    dessert: '디저트'
-};
+const labelsTime = { lunch: '점심', dinner: '저녁', lateNight: '야식', dessert: '디저트' };
+const labelsType = { all: '전체', korean: '한식', japanese: '일식', chinese: '중식', western: '양식', others: '기타' };
 
-const subCategoryLabels = {
-    all: '전체',
-    korean: '한식',
-    japanese: '일식',
-    chinese: '중식',
-    western: '양식',
-    others: '기타'
-};
+// Styling sets
+const styleActive = ['border-orange-500', 'bg-orange-50', 'text-orange-700', 'shadow-sm'];
+const styleInactive = ['border-slate-200', 'bg-white', 'text-slate-700', 'hover:border-orange-500', 'hover:bg-slate-50'];
 
-// --- DOM Elements ---
-const mainTabBtns = document.querySelectorAll('.main-tabs .tab-btn');
-const subTabsContainer = document.getElementById('subTabs');
-const subTabBtns = document.querySelectorAll('.sub-tab-btn');
-const tabSlider = document.querySelector('.tab-slider');
-const recommendBtn = document.getElementById('recommendBtn');
-const resultCard = document.getElementById('resultCard');
-const resultPlaceholder = resultCard.querySelector('.result-placeholder');
-const loadingContainer = document.getElementById('loadingContainer');
-const resultContent = document.getElementById('resultContent');
-const resultMainTag = document.getElementById('resultMainTag');
-const resultSubTag = document.getElementById('resultSubTag');
-const resultMenu = document.getElementById('resultMenu');
-const resultEmoji = document.getElementById('resultEmoji');
-const naverSearchBtn = document.getElementById('naverSearchBtn');
-const bookmarkBtn = document.getElementById('bookmarkBtn');
-
-const historyBtn = document.getElementById('recommendHistoryBtn');
-const bookmarkListBtn = document.getElementById('bookmarkListBtn');
-const listOverlay = document.getElementById('listOverlay');
-const listTitle = document.getElementById('listTitle');
-const displayList = document.getElementById('displayList');
-const closeListBtn = document.getElementById('closeListBtn');
-const clearBtn = document.getElementById('clearBtn');
-
-// --- State ---
+// States
 let currentMain = 'lunch';
 let currentSub = 'all';
+let foodHistory = JSON.parse(localStorage.getItem('whateatHistory') || '[]');
+let bookmarks = JSON.parse(localStorage.getItem('whateatBookmark') || '[]');
 let currentListView = 'history';
 
-let foodHistory = JSON.parse(localStorage.getItem('foodHistory') || '[]');
-let bookmarks = JSON.parse(localStorage.getItem('foodBookmarks') || '[]');
-
-// --- Functions ---
-function updateStorage(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
-}
-
-function openNaver(name) {
-    const query = encodeURIComponent(name + ' 맛집');
-    window.open(`https://search.naver.com/search.naver?query=${query}`, '_blank');
-}
-
-function renderList() {
-    displayList.innerHTML = '';
-    const data = currentListView === 'history' ? foodHistory : bookmarks;
+// --- Initialization ---
+function initSelectors() {
+    const timeGrid = document.getElementById('time-tabs');
+    timeGrid.innerHTML = '';
+    Object.entries(labelsTime).forEach(([key, name]) => {
+        const btn = document.createElement('button');
+        btn.className = `btn-time p-4 rounded-2xl border-2 transition-all text-center font-bold text-lg outline-none active:scale-95 ${key === currentMain ? styleActive.join(' ') : styleInactive.join(' ')}`;
+        btn.innerText = name;
+        btn.onclick = () => selectTime(key);
+        timeGrid.appendChild(btn);
+    });
     
-    if (data.length === 0) {
-        displayList.innerHTML = `<li style="text-align:center; padding:40px; color:#adb5bd;">기록이 없습니다.</li>`;
+    renderTypeTabs();
+}
+
+function renderTypeTabs() {
+    const typeGrid = document.getElementById('type-tabs');
+    const typeLabel = document.getElementById('type-section-container');
+    
+    if (currentMain === 'dessert') {
+        typeLabel.classList.add('hidden');
         return;
     }
-
-    data.forEach((item) => {
-        const li = document.createElement('li');
-        li.className = 'history-item';
-        li.innerHTML = `
-            <span>${item.emoji} ${item.name}</span>
-            <small style="color:#adb5bd; font-size:0.7rem;">${item.date || ''}</small>
-        `;
-        li.onclick = () => openNaver(item.name);
-        displayList.appendChild(li);
+    typeLabel.classList.remove('hidden');
+    typeGrid.innerHTML = '';
+    
+    Object.entries(labelsType).forEach(([key, name]) => {
+        const btn = document.createElement('button');
+        btn.className = `btn-type p-3 rounded-2xl border-2 transition-all text-center font-bold outline-none active:scale-95 ${key === currentSub ? styleActive.join(' ') : styleInactive.join(' ')}`;
+        btn.innerText = name;
+        btn.onclick = () => selectType(key);
+        typeGrid.appendChild(btn);
     });
 }
 
-function toggleList(view) {
-    currentListView = view;
-    listTitle.textContent = view === 'history' ? '🕒 최근 추천 히스토리' : '⭐ 즐겨찾는 북마크';
-    renderList();
-    listOverlay.classList.remove('hidden');
+function selectTime(key) {
+    currentMain = key;
+    currentSub = 'all';
+    initSelectors();
+    resetResult();
 }
 
-function updateBookmarkBtn(isBookmarked) {
-    bookmarkBtn.textContent = isBookmarked ? '❤️' : '🤍';
-    bookmarkBtn.classList.toggle('active', isBookmarked);
-}
-
-function toggleBookmark(name, emoji) {
-    const index = bookmarks.findIndex(b => b.name === name);
-    if (index > -1) {
-        bookmarks.splice(index, 1);
-        updateBookmarkBtn(false);
-    } else {
-        if (bookmarks.length >= 20) bookmarks.pop();
-        bookmarks.unshift({ name, emoji, date: '북마크됨' });
-        updateBookmarkBtn(true);
-    }
-    updateStorage('foodBookmarks', bookmarks);
+function selectType(key) {
+    currentSub = key;
+    renderTypeTabs();
+    resetResult();
 }
 
 function resetResult() {
-    resultPlaceholder.classList.remove('hidden');
-    resultContent.classList.add('hidden');
-    loadingContainer.classList.add('hidden');
-    resultCard.classList.remove('active');
-    recommendBtn.textContent = '메뉴 추천받기!';
-    recommendBtn.disabled = false;
+    document.getElementById('roulette-display').innerText = '클릭해서 뽑기!';
+    document.getElementById('result-emoji').classList.add('hidden');
+    document.getElementById('action-buttons').classList.add('hidden');
+    document.getElementById('result-tags').innerHTML = '';
+    const drawBtn = document.getElementById('draw-btn');
+    drawBtn.disabled = false;
+    drawBtn.innerText = '오늘의 메뉴 뽑기';
 }
 
-// --- Events ---
-mainTabBtns.forEach((btn, index) => {
-    btn.addEventListener('click', () => {
-        mainTabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        tabSlider.style.transform = `translateX(${index * 100}%)`;
-        currentMain = btn.dataset.category;
-        subTabsContainer.classList.toggle('hidden', currentMain === 'dessert');
-        resetResult();
-    });
-});
-
-subTabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        subTabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentSub = btn.dataset.sub;
-        resetResult();
-    });
-});
-
-recommendBtn.addEventListener('click', () => {
+// --- Roulette System ---
+document.getElementById('draw-btn').addEventListener('click', () => {
     let pool = [];
     if (currentMain === 'dessert') {
         pool = menus.dessert;
     } else {
-        const mainData = menus[currentMain];
-        pool = currentSub === 'all' ? Object.values(mainData).flat() : mainData[currentSub];
+        const d = menus[currentMain];
+        pool = currentSub === 'all' ? Object.values(d).flat() : d[currentSub];
     }
-    if (!pool || pool.length === 0) return;
-
-    resultPlaceholder.classList.add('hidden');
-    resultContent.classList.remove('hidden');
-    resultCard.classList.add('active');
-    recommendBtn.disabled = true;
-    recommendBtn.textContent = '고르는 중...';
-
-    naverSearchBtn.style.visibility = 'hidden';
-    bookmarkBtn.style.visibility = 'hidden';
-    resultEmoji.style.visibility = 'hidden';
-    resultMenu.classList.add('shuffling');
-
-    let shuffleCount = 0;
-    const maxShuffle = 12;
-
-    const shuffleInterval = setInterval(() => {
-        const tempMenu = pool[Math.floor(Math.random() * pool.length)];
-        resultMenu.textContent = tempMenu.name;
-        shuffleCount++;
-
-        if (shuffleCount >= maxShuffle) {
-        clearInterval(shuffleInterval);
+    
+    if(!pool.length) return;
+    
+    const display = document.getElementById('roulette-display');
+    const emoji = document.getElementById('result-emoji');
+    const btn = document.getElementById('draw-btn');
+    
+    btn.disabled = true;
+    btn.innerText = '열심히 고르는 중...';
+    document.getElementById('action-buttons').classList.add('hidden');
+    emoji.classList.add('hidden');
+    document.getElementById('result-tags').innerHTML = '';
+    
+    display.classList.add('shuffling');
+    
+    let count = 0;
+    const interval = setInterval(() => {
+        const randomItem = pool[Math.floor(Math.random() * pool.length)];
+        display.innerText = randomItem.name;
+        count++;
         
-        // 최종 결과 노출
-        resultMenu.classList.remove('shuffling');
-
-        // 최근 추천 히스토리 저장
-        const dateStr = new Date().toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
-        if(foodHistory.length >= 20) foodHistory.pop();
-        foodHistory.unshift({ name: tempMenu.name, emoji: tempMenu.emoji, date: dateStr });
-        updateStorage('foodHistory', foodHistory);
-
-        // 태그 업데이트
-        resultMainTag.textContent = categoryLabels[currentMain];
-        resultSubTag.textContent = currentMain === 'dessert' ? '' : subCategoryLabels[currentSub];
-        if (currentMain === 'dessert') {
-            resultSubTag.style.display = 'none';
-        } else {
-            resultSubTag.style.display = 'inline-block';
+        if (count > 15) {
+            clearInterval(interval);
+            display.classList.remove('shuffling');
+            btn.disabled = false;
+            btn.innerText = '다른 메뉴 추천받기 🎲';
+            
+            // Final result
+            display.innerText = randomItem.name;
+            emoji.innerText = randomItem.emoji;
+            emoji.classList.remove('hidden');
+            document.getElementById('action-buttons').classList.remove('hidden');
+            
+            showTags();
+            checkBookmarkBtnStatus(randomItem.name);
+            saveHistory(randomItem);
+            
+            // GA4 
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'draw_success', {
+                    'item': randomItem.name,
+                    'time': currentMain,
+                    'type': currentSub
+                });
+            }
         }
-
-        // GA4 이벤트 로깅 - 사용자가 선호하는 카테고리/메뉴 추적
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'recommendation_success', {
-                'event_category': 'Menu Recommendation',
-                'event_label': tempMenu.name,
-                'time_category': currentMain,
-                'food_type': currentSub
-            });
-        }
-        
-        // 버튼과 이모지를 서서히 나타나게 함
-        resultEmoji.style.visibility = 'visible';
-        bookmarkBtn.style.visibility = 'visible';
-        naverSearchBtn.style.visibility = 'visible';
-        
-        // 버튼 텍스트 복구
-        recommendBtn.disabled = false;
-        recommendBtn.textContent = '다른 메뉴 보기';
-    }
-    }, 100);
+    }, 80);
 });
 
-bookmarkBtn.addEventListener('click', () => {
-    toggleBookmark(resultMenu.textContent, resultEmoji.textContent);
+function showTags() {
+    const container = document.getElementById('result-tags');
+    container.innerHTML = `<span class="bg-indigo-50 text-indigo-600 text-xs font-bold px-2.5 py-1 rounded-md border border-indigo-100">${labelsTime[currentMain]}</span>`;
+    if(currentMain !== 'dessert') {
+        container.innerHTML += `<span class="bg-blue-50 text-blue-600 text-xs font-bold px-2.5 py-1 rounded-md border border-blue-100">${labelsType[currentSub]}</span>`;
+    }
+}
+
+// --- Action Buttons (Naver / Bookmark) ---
+document.getElementById('naver-search-btn').addEventListener('click', () => {
+    const term = document.getElementById('roulette-display').innerText;
+    window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(term + ' 맛집')}`, '_blank');
 });
 
-historyBtn.addEventListener('click', () => toggleList('history'));
-bookmarkListBtn.addEventListener('click', () => toggleList('bookmark'));
-closeListBtn.addEventListener('click', () => listOverlay.classList.add('hidden'));
+function checkBookmarkBtnStatus(name) {
+    const isBookmarked = bookmarks.some(b => b.name === name);
+    const btn = document.getElementById('bookmark-btn');
+    if(isBookmarked) {
+        btn.classList.add('bg-orange-100', 'text-orange-700', 'border-orange-200');
+        btn.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-200');
+        btn.innerText = '북마크 저장됨 🧡';
+    } else {
+        btn.classList.remove('bg-orange-100', 'text-orange-700', 'border-orange-200');
+        btn.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200');
+        btn.innerText = '즐겨찾기 추가 🤍';
+    }
+}
 
-clearBtn.addEventListener('click', () => {
-    if (confirm('전체 삭제하시겠습니까?')) {
-        if (currentListView === 'history') {
-            foodHistory = [];
-            updateStorage('foodHistory', []);
-        } else {
-            bookmarks = [];
-            updateStorage('foodBookmarks', []);
-            updateBookmarkBtn(false);
-        }
-        renderList();
+document.getElementById('bookmark-btn').addEventListener('click', () => {
+    const name = document.getElementById('roulette-display').innerText;
+    const emoji = document.getElementById('result-emoji').innerText;
+    
+    const idx = bookmarks.findIndex(b => b.name === name);
+    if(idx > -1) {
+        bookmarks.splice(idx, 1);
+    } else {
+        bookmarks.unshift({ name, emoji });
+    }
+    localStorage.setItem('whateatBookmark', JSON.stringify(bookmarks));
+    checkBookmarkBtnStatus(name);
+});
+
+// --- History & Modal ---
+function saveHistory(item) {
+    if(foodHistory.length >= 20) foodHistory.pop();
+    const dateStr = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    foodHistory.unshift({ ...item, date: dateStr });
+    localStorage.setItem('whateatHistory', JSON.stringify(foodHistory));
+}
+
+document.getElementById('view-history-btn').addEventListener('click', () => openModal('history'));
+document.getElementById('view-bookmark-btn').addEventListener('click', () => openModal('bookmark'));
+document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+document.getElementById('list-modal').addEventListener('click', (e) => {
+    if(e.target.id === 'list-modal') closeModal();
+});
+
+document.getElementById('clear-list-btn').addEventListener('click', () => {
+    if(confirm('이 기록을 전부 삭제하시겠습니까?')) {
+        if(currentListView === 'history') { foodHistory = []; localStorage.removeItem('whateatHistory'); }
+        else { bookmarks = []; localStorage.removeItem('whateatBookmark'); checkBookmarkBtnStatus(document.getElementById('roulette-display').innerText); }
+        renderModalList();
     }
 });
 
-window.onclick = (event) => {
-    if (event.target == listOverlay) listOverlay.classList.add('hidden');
-};
+function openModal(type) {
+    currentListView = type;
+    document.getElementById('modal-title').innerText = type === 'history' ? '🕒 최근 뽑은 내역' : '⭐ 내 북마크';
+    renderModalList();
+    
+    const modal = document.getElementById('list-modal');
+    const box = document.getElementById('modal-box');
+    modal.classList.remove('hidden');
+    // slight delay for transition
+    setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
+
+function closeModal() {
+    const modal = document.getElementById('list-modal');
+    const box = document.getElementById('modal-box');
+    box.classList.remove('scale-100', 'opacity-100');
+    box.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => modal.classList.add('hidden'), 200);
+}
+
+function renderModalList() {
+    const list = document.getElementById('modal-list');
+    const data = currentListView === 'history' ? foodHistory : bookmarks;
+    list.innerHTML = '';
+    
+    if(data.length === 0) {
+        list.innerHTML = '<li class="text-center py-8 text-slate-400 text-sm">기록이 비어있습니다.</li>';
+        return;
+    }
+    
+    data.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'w-full p-4 bg-white rounded-2xl mb-2 flex items-center justify-between shadow-sm border border-slate-100 cursor-pointer hover:border-indigo-300 transition-all';
+        li.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">${item.emoji}</span>
+                <span class="font-bold text-slate-800">${item.name}</span>
+            </div>
+            ${item.date ? `<span class="text-xs text-slate-400 font-medium">${item.date}</span>` : `<span class="text-xs font-bold text-orange-500 hover:text-orange-700">검색🔍</span>`}
+        `;
+        li.onclick = () => window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(item.name + ' 맛집')}`, '_blank');
+        list.appendChild(li);
+    });
+}
+
+// --- Top Nav Tabs Navigation ---
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Reset styles for all nav buttons
+        document.querySelectorAll('.nav-btn').forEach(b => {
+            b.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+            b.classList.add('text-slate-500');
+        });
+        
+        // Hide all sections
+        document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
+        
+        // Activate selected
+        btn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+        btn.classList.remove('text-slate-500');
+        document.getElementById(btn.dataset.target).classList.add('active');
+    });
+});
+
+// --- Gemini API for AI Column ---
+const GEMINI_API_KEY = "YOUR-API-KEY-HERE"; // Will be injected or fetched from backend
+
+// Retry logic wrapper
+async function fetchWithRetry(url, options, retries = 3, backoff = 1000) {
+    try {
+        const response = await fetch(url, options);
+        if(!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+        return await response.json();
+    } catch(err) {
+        if(retries <= 0) throw err;
+        await new Promise(r => setTimeout(r, backoff));
+        return fetchWithRetry(url, options, retries - 1, backoff * 2);
+    }
+}
+
+document.getElementById('gen-col-btn').addEventListener('click', async () => {
+    // If no key set, simulate or prompt
+    const key = prompt("Gemini API Key를 입력하세요 (이 창은 테스트용입니다):");
+    if(!key) return;
+
+    const loading = document.getElementById('ai-loading');
+    const container = document.getElementById('column-list');
+    loading.classList.remove('hidden');
+
+    const sysPrompt = "너는 유명한 음식 칼럼니스트이자 영양학, 심리학 전문가야. 사용자가 흥미로워할 식문화, 영양, 심리와 얽힌 칼럼을 구글 블로그 SEO 양식에 맞게 600자 가량으로 전문성 있게 써줘. JSON 포맷으로 { title, content } 를 리턴해.";
+    const userPrompt = "현대인의 스트레스와 매운맛의 심리학적 상관관계, 혹은 제철음식에 대한 매력적인 칼럼을 무작위로 하나만 생성해줘.";
+
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+        const result = await fetchWithRetry(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                systemInstruction: { parts: [{ text: sysPrompt }] },
+                contents: [{ parts: [{ text: userPrompt }] }],
+                generationConfig: {
+                    temperature: 0.7,
+                    responseMimeType: "application/json"
+                }
+            })
+        });
+
+        const rawText = result.candidates[0].content.parts[0].text;
+        const data = JSON.parse(rawText);
+
+        const article = document.createElement('article');
+        article.className = "bg-white p-6 rounded-3xl card-shadow border border-slate-50 animate-fadeIn";
+        article.innerHTML = `
+            <div class="flex items-center space-x-2 mb-3">
+                <span class="bg-indigo-100 text-indigo-600 text-xs font-bold px-2 py-1 rounded-md">NEW AI</span>
+                <span class="text-slate-400 text-xs font-medium">${new Date().toLocaleDateString('ko-KR')}</span>
+            </div>
+            <h3 class="text-lg md:text-xl font-bold mb-3 text-slate-800">${data.title}</h3>
+            <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-4">${data.content}</p>
+        `;
+        container.prepend(article);
+
+    } catch (error) {
+        console.error(error);
+        alert('칼럼 생성에 실패했습니다. API 키나 네트워크를 확인해주세요.');
+    } finally {
+        loading.classList.add('hidden');
+    }
+});
+
+// run!
+initSelectors();
