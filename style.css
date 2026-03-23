@@ -147,3 +147,42 @@ footer {
 .sub-btn:active {
     transform: translateY(0);
 }
+
+/* 방대한 텍스트 콘텐츠(SEO) 영역 스타일 */
+.content-section {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 30px;
+    margin-top: 40px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid #f1f3f5;
+}
+
+.content-section h3 {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f3f5;
+}
+
+.content-section article {
+    margin-bottom: 20px;
+}
+
+.content-section article:last-child {
+    margin-bottom: 0;
+}
+
+.content-section h4 {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    margin-bottom: 8px;
+}
+
+.content-section p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #495057;
+}
