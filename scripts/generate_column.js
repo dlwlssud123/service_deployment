@@ -24,7 +24,7 @@ async function generateColumn() {
 기존에 다룬 주제들(${existingTitles})과 겹치지 않는 완전히 새로운 주제여야 해.`;
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
     console.log("Connecting to Gemini API...");
     const response = await fetch(url, {
       method: 'POST',
@@ -40,11 +40,11 @@ async function generateColumn() {
     }
     const result = await response.json();
     let rawText = result.candidates[0].content.parts[0].text;
-    
+
     // Clean up markdown if AI includes it
     rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
     const data = JSON.parse(rawText);
-    
+
     // Add new
     const newColumn = {
       id: currentColumns.length + 1,
@@ -52,9 +52,9 @@ async function generateColumn() {
       content: data.content,
       date: new Date().toISOString().split('T')[0]
     };
-    
+
     currentColumns.unshift(newColumn);
-    
+
     // Write back
     fs.writeFileSync(DATA_PATH, JSON.stringify(currentColumns, null, 2));
     console.log(`Successfully generated and saved: ${data.title}`);
