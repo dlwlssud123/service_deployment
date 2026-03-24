@@ -1,8 +1,17 @@
-# 1. 웹 서버로 사용할 베이스 이미지를 선택합니다. (가볍고 성능이 좋은 nginx alpine 버전)
 FROM nginx:alpine
 
-# 2. 현재 폴더의 모든 파일(index.html, style.css, app.js 등)을 nginx의 기본 경로로 복사합니다.
+# Copy web content
 COPY . /usr/share/nginx/html
 
-# 3. 80번 포트를 외부에 공개합니다.
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Create certs directory and copy certificates
+# Note: User must fill cert.pem and key.pem before building
+RUN mkdir -p /etc/nginx/certs
+COPY cert.pem /etc/nginx/certs/cert.pem
+COPY key.pem /etc/nginx/certs/key.pem
+
+# Expose both HTTP (redirect) and HTTPS
 EXPOSE 80
+EXPOSE 443
