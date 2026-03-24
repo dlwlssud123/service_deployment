@@ -76,9 +76,8 @@ footer {
 .article-body h3 { font-size: 1.5rem; font-weight: 800; color: #1f2937; margin-bottom: 1rem; }
 .article-body p { margin-bottom: 1.5rem; text-align: justify; }
 
-/* Tab 스타일 제거/수정 (탭 버튼은 이제 사용하지 않으므로 숨기거나 삭제 가능) */
-.category-tabs { display: none; }
-.sub-category-tabs { margin-bottom: 20px; }
+/* Ensure Categories are visible in the new layout */
+.sub-category-tabs { margin-bottom: 20px; display: flex !important; }
 
 /* 결과 카드 간격 조정 */
 .tag-group { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 35px; } /* Gap 증가 */

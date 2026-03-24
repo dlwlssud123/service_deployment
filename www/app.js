@@ -22,7 +22,7 @@ const menus = {
     },
     dessert: [
         { name: '크로플', emoji: '🥐' }, { name: '마카롱', emoji: '🍪' }, { name: '탕후루', emoji: '🍓' }, { name: '케이크', emoji: '🍰' }, { name: '빙수', emoji: '🍧' }, { name: '아이스크림', emoji: '🍦' },
-        { name: '푸딩', emoji: '🍮' }, { name: '와플', emoji: '🧇' }, { name: '쿠키', emoji: '🍪' }, { name: '베이글', emoji: '🥯' }, { name: '에그타르트', emoji: '🥧' }, { name: '약과', emoji: '🍯' },
+        { name: '푸딩', emoji: '🍮' }, { name: '와플', emoji: '컨셉' }, { name: '쿠키', emoji: '🍪' }, { name: '베이글', emoji: '🥯' }, { name: '에그타르트', emoji: '🥧' }, { name: '약과', emoji: '🍯' },
         { name: '붕어빵', emoji: '🐟' }, { name: '호떡', emoji: '🥞' }
     ]
 };
@@ -30,11 +30,9 @@ const menus = {
 const labelsTime = { lunch: '점심', dinner: '저녁', lateNight: '야식', dessert: '디저트' };
 const labelsType = { all: '전체', korean: '한식', japanese: '일식', chinese: '중식', western: '양식', others: '기타' };
 
-// Styling sets
 const styleActive = ['border-orange-500', 'bg-orange-50', 'text-orange-700', 'shadow-sm'];
 const styleInactive = ['border-slate-200', 'bg-white', 'text-slate-700', 'hover:border-orange-500', 'hover:bg-slate-50'];
 
-// States
 let currentMain = 'lunch';
 let currentSub = 'all';
 let foodHistory = JSON.parse(localStorage.getItem('whateatHistory') || '[]');
@@ -44,6 +42,7 @@ let currentListView = 'history';
 // --- Initialization ---
 function initSelectors() {
     const timeGrid = document.getElementById('time-tabs');
+    if (!timeGrid) return;
     timeGrid.innerHTML = '';
     Object.entries(labelsTime).forEach(([key, name]) => {
         const btn = document.createElement('button');
@@ -52,13 +51,13 @@ function initSelectors() {
         btn.onclick = () => selectTime(key);
         timeGrid.appendChild(btn);
     });
-    
     renderTypeTabs();
 }
 
 function renderTypeTabs() {
     const typeGrid = document.getElementById('type-tabs');
     const typeLabel = document.getElementById('type-section-container');
+    if (!typeGrid || !typeLabel) return;
     
     if (currentMain === 'dessert') {
         typeLabel.classList.add('hidden');
@@ -120,7 +119,6 @@ document.getElementById('draw-btn').addEventListener('click', () => {
     document.getElementById('action-buttons').classList.add('hidden');
     emoji.classList.add('hidden');
     document.getElementById('result-tags').innerHTML = '';
-    
     display.classList.add('shuffling');
     
     let count = 0;
@@ -134,25 +132,13 @@ document.getElementById('draw-btn').addEventListener('click', () => {
             display.classList.remove('shuffling');
             btn.disabled = false;
             btn.innerText = '다른 메뉴 추천받기 🎲';
-            
-            // Final result
             display.innerText = randomItem.name;
             emoji.innerText = randomItem.emoji;
             emoji.classList.remove('hidden');
             document.getElementById('action-buttons').classList.remove('hidden');
-            
             showTags();
             checkBookmarkBtnStatus(randomItem.name);
             saveHistory(randomItem);
-            
-            // GA4 
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'draw_success', {
-                    'item': randomItem.name,
-                    'time': currentMain,
-                    'type': currentSub
-                });
-            }
         }
     }, 80);
 });
@@ -165,7 +151,7 @@ function showTags() {
     }
 }
 
-// --- Action Buttons (Naver / Bookmark) ---
+// --- Action Buttons ---
 document.getElementById('naver-search-btn').addEventListener('click', () => {
     const term = document.getElementById('roulette-display').innerText;
     window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(term + ' 맛집')}`, '_blank');
@@ -176,11 +162,9 @@ function checkBookmarkBtnStatus(name) {
     const btn = document.getElementById('bookmark-btn');
     if(isBookmarked) {
         btn.classList.add('bg-orange-100', 'text-orange-700', 'border-orange-200');
-        btn.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-200');
         btn.innerText = '북마크 저장됨 🧡';
     } else {
         btn.classList.remove('bg-orange-100', 'text-orange-700', 'border-orange-200');
-        btn.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200');
         btn.innerText = '즐겨찾기 추가 🤍';
     }
 }
@@ -188,18 +172,14 @@ function checkBookmarkBtnStatus(name) {
 document.getElementById('bookmark-btn').addEventListener('click', () => {
     const name = document.getElementById('roulette-display').innerText;
     const emoji = document.getElementById('result-emoji').innerText;
-    
     const idx = bookmarks.findIndex(b => b.name === name);
-    if(idx > -1) {
-        bookmarks.splice(idx, 1);
-    } else {
-        bookmarks.unshift({ name, emoji });
-    }
+    if(idx > -1) bookmarks.splice(idx, 1);
+    else bookmarks.unshift({ name, emoji });
     localStorage.setItem('whateatBookmark', JSON.stringify(bookmarks));
     checkBookmarkBtnStatus(name);
 });
 
-// --- History & Modal ---
+// --- Modal & History ---
 function saveHistory(item) {
     if(foodHistory.length >= 20) foodHistory.pop();
     const dateStr = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
@@ -207,31 +187,14 @@ function saveHistory(item) {
     localStorage.setItem('whateatHistory', JSON.stringify(foodHistory));
 }
 
-document.getElementById('view-history-btn').addEventListener('click', () => openModal('history'));
-document.getElementById('view-bookmark-btn').addEventListener('click', () => openModal('bookmark'));
-document.getElementById('close-modal-btn').addEventListener('click', closeModal);
-document.getElementById('list-modal').addEventListener('click', (e) => {
-    if(e.target.id === 'list-modal') closeModal();
-});
-
-document.getElementById('clear-list-btn').addEventListener('click', () => {
-    if(confirm('이 기록을 전부 삭제하시겠습니까?')) {
-        if(currentListView === 'history') { foodHistory = []; localStorage.removeItem('whateatHistory'); }
-        else { bookmarks = []; localStorage.removeItem('whateatBookmark'); checkBookmarkBtnStatus(document.getElementById('roulette-display').innerText); }
-        renderModalList();
-    }
-});
-
 function openModal(type) {
     document.getElementById('clear-list-btn').classList.remove('hidden');
     currentListView = type;
     document.getElementById('modal-title').innerText = type === 'history' ? '🕒 최근 뽑은 내역' : '⭐ 내 북마크';
     renderModalList();
-    
     const modal = document.getElementById('list-modal');
     const box = document.getElementById('modal-box');
     modal.classList.remove('hidden');
-    // slight delay for transition
     setTimeout(() => {
         box.classList.remove('scale-95', 'opacity-0');
         box.classList.add('scale-100', 'opacity-100');
@@ -250,12 +213,10 @@ function renderModalList() {
     const list = document.getElementById('modal-list');
     const data = currentListView === 'history' ? foodHistory : bookmarks;
     list.innerHTML = '';
-    
     if(data.length === 0) {
         list.innerHTML = '<li class="text-center py-8 text-slate-400 text-sm">기록이 비어있습니다.</li>';
         return;
     }
-    
     data.forEach(item => {
         const li = document.createElement('li');
         li.className = 'w-full p-4 bg-white rounded-2xl mb-2 flex items-center justify-between shadow-sm border border-slate-100 cursor-pointer hover:border-indigo-300 transition-all';
@@ -264,14 +225,24 @@ function renderModalList() {
                 <span class="text-2xl">${item.emoji}</span>
                 <span class="font-bold text-slate-800">${item.name}</span>
             </div>
-            ${item.date ? `<span class="text-xs text-slate-400 font-medium">${item.date}</span>` : `<span class="text-xs font-bold text-orange-500 hover:text-orange-700">검색🔍</span>`}
+            ${item.date ? `<span class="text-xs text-slate-400 font-medium">${item.date}</span>` : `<span class="text-xs font-bold text-orange-500">검색🔍</span>`}
         `;
         li.onclick = () => window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(item.name + ' 맛집')}`, '_blank');
         list.appendChild(li);
     });
 }
 
-// --- Carousel Logic ---
+document.getElementById('close-modal-btn').onclick = closeModal;
+document.getElementById('list-modal').onclick = (e) => { if(e.target.id === 'list-modal') closeModal(); };
+document.getElementById('clear-list-btn').onclick = () => {
+    if(confirm('기록을 전부 삭제하시겠습니까?')) {
+        if(currentListView === 'history') { foodHistory = []; localStorage.removeItem('whateatHistory'); }
+        else { bookmarks = []; localStorage.removeItem('whateatBookmark'); checkBookmarkBtnStatus(document.getElementById('roulette-display').innerText); }
+        renderModalList();
+    }
+};
+
+// --- Carousel Architecture ---
 let currentColumnIndex = 0;
 let columnData = [];
 let carouselInterval;
@@ -283,10 +254,8 @@ async function loadColumns() {
         const response = await fetch('data/columns.json');
         if (!response.ok) throw new Error('Failed to load columns');
         columnData = await response.json();
-        
         list.innerHTML = '';
         dotsContainer.innerHTML = '';
-        
         columnData.forEach((col, index) => {
             const article = document.createElement('article');
             article.className = "p-6 rounded-3xl border border-slate-50 bg-white/50 backdrop-blur-sm card-shadow mr-4";
@@ -301,68 +270,41 @@ async function loadColumns() {
             `;
             article.onclick = () => openColumnDetail(col);
             list.appendChild(article);
-            
-            // Dot
             const dot = document.createElement('div');
             dot.className = `dot ${index === 0 ? 'active' : ''}`;
             dotsContainer.appendChild(dot);
         });
-        
         startCarousel();
-    } catch (error) {
-        console.error("Could not load columns:", error);
-    }
+    } catch (error) { console.error("Could not load columns:", error); }
 }
 
-function startCarousel() {
-    clearInterval(carouselInterval);
-    carouselInterval = setInterval(nextColumn, 5000); // 5 seconds
-}
-
+function startCarousel() { clearInterval(carouselInterval); carouselInterval = setInterval(() => { nextColumn(); }, 5000); }
 function updateCarousel() {
     const list = document.getElementById('column-list');
     const dots = document.querySelectorAll('.dot');
-    const offset = currentColumnIndex * -100;
-    list.style.transform = `translateX(${offset}%)`;
-    
-    dots.forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === currentColumnIndex);
-    });
+    list.style.transform = `translateX(${currentColumnIndex * -100}%)`;
+    dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentColumnIndex));
 }
+function nextColumn() { if (!columnData.length) return; currentColumnIndex = (currentColumnIndex + 1) % columnData.length; updateCarousel(); }
+function prevColumn() { if (!columnData.length) return; currentColumnIndex = (currentColumnIndex - 1 + columnData.length) % columnData.length; updateCarousel(); }
 
-function nextColumn() {
-    if (!columnData.length) return;
-    currentColumnIndex = (currentColumnIndex + 1) % columnData.length;
-    updateCarousel();
-}
-
-function prevColumn() {
-    if (!columnData.length) return;
-    currentColumnIndex = (currentColumnIndex - 1 + columnData.length) % columnData.length;
-    updateCarousel();
-}
-
-document.getElementById('next-col').addEventListener('click', () => { nextColumn(); startCarousel(); });
-document.getElementById('prev-col').addEventListener('click', () => { prevColumn(); startCarousel(); });
+document.getElementById('next-col').onclick = () => { nextColumn(); startCarousel(); };
+document.getElementById('prev-col').onclick = () => { prevColumn(); startCarousel(); };
 
 function openColumnDetail(col) {
     const modal = document.getElementById('list-modal');
     const title = document.getElementById('modal-title');
     const list = document.getElementById('modal-list');
     const clearBtn = document.getElementById('clear-list-btn');
-    
     title.innerText = "📖 푸드 매거진";
     clearBtn.classList.add('hidden');
-    list.innerHTML = `
-        <div class="p-6 space-y-4">
-            <p class="text-[10px] font-bold text-indigo-500 uppercase">${col.date} 발행</p>
-            <h2 class="text-2xl font-black text-slate-900 leading-tight">${col.title}</h2>
-            <div class="h-1 w-12 bg-indigo-500 rounded-full"></div>
-            <p class="text-slate-600 text-base leading-loose whitespace-pre-wrap">${col.content}</p>
-        </div>
-    `;
-    
-    document.getElementById('list-modal').classList.remove('hidden');
+    list.innerHTML = `<div class="p-6 space-y-4 text-left">
+        <p class="text-[10px] font-bold text-indigo-500 uppercase">${col.date} 발행</p>
+        <h2 class="text-2xl font-black text-slate-900 leading-tight">${col.title}</h2>
+        <div class="h-1 w-12 bg-indigo-500 rounded-full"></div>
+        <p class="text-slate-600 text-base leading-loose whitespace-pre-wrap">${col.content}</p>
+    </div>`;
+    modal.classList.remove('hidden');
     document.getElementById('modal-box').classList.remove('scale-95', 'opacity-0');
     document.getElementById('modal-box').classList.add('scale-100', 'opacity-100', 'max-w-md');
 }
@@ -371,111 +313,11 @@ function openColumnDetail(col) {
 document.getElementById('view-history-btn-top').onclick = () => openModal('history');
 document.getElementById('view-bookmark-btn-top').onclick = () => openModal('bookmark');
 
-// --- Gemini API for AI Column ---
-const GEMINI_API_KEY = "YOUR-API-KEY-HERE"; // Will be injected or fetched from backend
-
-// Retry logic wrapper
-async function fetchWithRetry(url, options, retries = 3, backoff = 1000) {
-    try {
-        const response = await fetch(url, options);
-        if(!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-        return await response.json();
-    } catch(err) {
-        if(retries <= 0) throw err;
-        await new Promise(r => setTimeout(r, backoff));
-        return fetchWithRetry(url, options, retries - 1, backoff * 2);
-    }
-}
-
-document.getElementById('gen-col-btn').addEventListener('click', async () => {
-    // If no key set, simulate or prompt
-    const key = prompt("Gemini API Key를 입력하세요 (이 창은 테스트용입니다):");
-    if(!key) return;
-
-    const loading = document.getElementById('ai-loading');
-    const container = document.getElementById('column-list');
-    loading.classList.remove('hidden');
-
-    const sysPrompt = "너는 유명한 음식 칼럼니스트이자 영양학, 심리학 전문가야. 사용자가 흥미로워할 식문화, 영양, 심리와 얽힌 칼럼을 구글 블로그 SEO 양식에 맞게 600자 가량으로 전문성 있게 써줘. JSON 포맷으로 { title, content } 를 리턴해.";
-    const userPrompt = "현대인의 스트레스와 매운맛의 심리학적 상관관계, 혹은 제철음식에 대한 매력적인 칼럼을 무작위로 하나만 생성해줘.";
-
-    try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-        const result = await fetchWithRetry(url, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                systemInstruction: { parts: [{ text: sysPrompt }] },
-                contents: [{ parts: [{ text: userPrompt }] }],
-                generationConfig: {
-                    temperature: 0.7,
-                    responseMimeType: "application/json"
-                }
-            })
-        });
-
-        const rawText = result.candidates[0].content.parts[0].text;
-        const data = JSON.parse(rawText);
-
-        const article = document.createElement('article');
-        article.className = "bg-white p-6 rounded-3xl card-shadow border border-slate-50 animate-fadeIn";
-        article.innerHTML = `
-            <div class="flex items-center space-x-2 mb-3">
-                <span class="bg-indigo-100 text-indigo-600 text-xs font-bold px-2 py-1 rounded-md">NEW AI</span>
-                <span class="text-slate-400 text-xs font-medium">${new Date().toLocaleDateString('ko-KR')}</span>
-            </div>
-            <h3 class="text-lg md:text-xl font-bold mb-3 text-slate-800">${data.title}</h3>
-            <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-4">${data.content}</p>
-        `;
-        container.prepend(article);
-
-    } catch (error) {
-        console.error(error);
-        alert('칼럼 생성에 실패했습니다. API 키나 네트워크를 확인해주세요.');
-    } finally {
-        loading.classList.add('hidden');
-    }
-});
-
-// --- Column Data Handling ---
-async function loadColumns() {
-    const list = document.getElementById('column-list');
-    try {
-        const response = await fetch('data/columns.json');
-        if (!response.ok) throw new Error('Failed to load columns');
-        const data = await response.json();
-        
-        // Clear except for the initial layout or just rebuild
-        list.innerHTML = '';
-        data.forEach((col, index) => {
-            const article = document.createElement('article');
-            article.className = "bg-white p-6 rounded-3xl card-shadow border border-slate-50";
-            article.innerHTML = `
-                <div class="flex items-center space-x-2 mb-3">
-                    <span class="${index === 0 ? 'bg-orange-100 text-orange-600' : 'bg-indigo-100 text-indigo-600'} text-xs font-bold px-2 py-1 rounded-md">
-                        ${index === 0 ? 'LATEST' : 'MAGAZINE'}
-                    </span>
-                    <span class="text-slate-400 text-xs font-medium">${col.date}</span>
-                </div>
-                <h3 class="text-lg md:text-xl font-bold mb-3 text-slate-800">${col.title}</h3>
-                <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-4">${col.content}</p>
-            `;
-            list.appendChild(article);
-        });
-    } catch (error) {
-        console.error("Could not load columns:", error);
-    }
-}
-
 // run!
 initSelectors();
 loadColumns();
 
-// --- PWA Service Worker Registration ---
+// PWA
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker Registered!', reg))
-            .catch(err => console.error('Service Worker Registration Failed:', err));
-    });
+    window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
 }
