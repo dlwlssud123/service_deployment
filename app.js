@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultTimeBtn = Array.from(document.querySelectorAll('.time-btn')).find(b => b.innerText === '점심');
     if (defaultTimeBtn) selectTime('점심', defaultTimeBtn);
     
-    const defaultCatBtn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.innerText === '한식');
-    if (defaultCatBtn) selectCategory('한식', defaultCatBtn);
+    const defaultCatBtn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.innerText === '전체');
+    if (defaultCatBtn) selectCategory('전체', defaultCatBtn);
 });
 
 function selectTime(time, btn) {
@@ -31,6 +31,12 @@ function selectTime(time, btn) {
         b.classList.add('border-slate-200', 'bg-white', 'text-slate-900');
     });
     btn.classList.add('border-orange-500', 'bg-orange-50', 'text-orange-600');
+    
+    // Update display text immediately when time changes
+    const activeCatBtn = document.querySelector('.cat-btn.text-orange-600');
+    if (activeCatBtn) {
+        updateDisplayText(currentTime, currentCategory);
+    }
 }
 
 function selectCategory(cat, btn) {
@@ -41,8 +47,16 @@ function selectCategory(cat, btn) {
     });
     btn.classList.add('border-orange-500', 'bg-orange-50', 'text-orange-600');
     
+    updateDisplayText(currentTime, cat);
+}
+
+function updateDisplayText(time, cat) {
     const display = document.getElementById('result-display');
-    display.innerText = `${currentTime} ${cat} 중에서 골라볼까요?`;
+    if (cat === '전체') {
+        display.innerText = `오늘 ${time} 메뉴로 무엇이 좋을까요?`;
+    } else {
+        display.innerText = `오늘 ${time}은 ${cat} 어때요? 😋`;
+    }
     display.classList.remove('text-slate-300');
     display.classList.add('text-slate-800');
 }
