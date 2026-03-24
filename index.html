@@ -70,12 +70,22 @@
                 <p class="text-slate-500 text-xs sm:text-sm">결정 장애를 해결해 드립니다.</p>
             </div>
 
+            <!-- Time Selection -->
+            <div class="flex flex-wrap gap-2 pb-2">
+                <button onclick="selectTime('아침', this)" class="time-btn px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">아침</button>
+                <button onclick="selectTime('점심', this)" class="time-btn px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">점심</button>
+                <button onclick="selectTime('간식', this)" class="time-btn px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">간식</button>
+                <button onclick="selectTime('저녁', this)" class="time-btn px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">저녁</button>
+                <button onclick="selectTime('야식', this)" class="time-btn px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">야식</button>
+            </div>
+
             <!-- Category Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
                 <button onclick="selectCategory('한식', this)" class="cat-btn py-3 sm:py-4 rounded-2xl border border-slate-200 bg-white text-sm font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">한식</button>
                 <button onclick="selectCategory('중식', this)" class="cat-btn py-3 sm:py-4 rounded-2xl border border-slate-200 bg-white text-sm font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">중식</button>
                 <button onclick="selectCategory('일식', this)" class="cat-btn py-3 sm:py-4 rounded-2xl border border-slate-200 bg-white text-sm font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">일식</button>
                 <button onclick="selectCategory('양식', this)" class="cat-btn py-3 sm:py-4 rounded-2xl border border-slate-200 bg-white text-sm font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">양식</button>
+                <button onclick="selectCategory('디저트', this)" class="cat-btn py-3 sm:py-4 rounded-2xl border border-slate-200 bg-white text-sm font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">디저트</button>
             </div>
 
             <!-- Roulette -->

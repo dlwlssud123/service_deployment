@@ -1,4 +1,5 @@
 let currentCategory = '전체';
+let currentTime = '점심';
 let columnData = [];
 let currentColumnIndex = 0;
 let rotationInterval = null;
@@ -8,15 +9,29 @@ const foodData = {
     '한식': ['비빔밥', '김치찌개', '제육볶음', '순대국', '불고기', '냉면', '삼겹살', '국밥', '닭갈비', '된장찌개'],
     '중식': ['짜장면', '짬뽕', '볶음밥', '탕수육', '마파두부', '양장피', '유산슬', '멘보샤'],
     '일식': ['초밥', '라멘', '돈카츠', '규동', '우동', '소바', '가츠동', '텐동', '사케동'],
-    '양식': ['파스타', '피자', '햄버거', '스테이크', '리조또', '샌드위치', '오므라이스', '감바스']
+    '양식': ['파스타', '피자', '햄버거', '스테이크', '리조또', '샌드위치', '오므라이스', '감바스'],
+    '디저트': ['조각케이크', '마카롱', '크로플', '빙수', '에그타르트', '와플', '도넛', '쿠키']
 };
 
 document.addEventListener('DOMContentLoaded', () => {
     loadColumns();
-    // Default category fallback
-    const firstCat = document.querySelector('.cat-btn');
-    if (firstCat) selectCategory('한식', firstCat);
+    
+    // Default fallback selection
+    const defaultTimeBtn = Array.from(document.querySelectorAll('.time-btn')).find(b => b.innerText === '점심');
+    if (defaultTimeBtn) selectTime('점심', defaultTimeBtn);
+    
+    const defaultCatBtn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.innerText === '한식');
+    if (defaultCatBtn) selectCategory('한식', defaultCatBtn);
 });
+
+function selectTime(time, btn) {
+    currentTime = time;
+    document.querySelectorAll('.time-btn').forEach(b => {
+        b.classList.remove('border-orange-500', 'bg-orange-50', 'text-orange-600');
+        b.classList.add('border-slate-200', 'bg-white', 'text-slate-900');
+    });
+    btn.classList.add('border-orange-500', 'bg-orange-50', 'text-orange-600');
+}
 
 function selectCategory(cat, btn) {
     currentCategory = cat;
@@ -25,9 +40,11 @@ function selectCategory(cat, btn) {
         b.classList.add('border-slate-200', 'bg-white', 'text-slate-900');
     });
     btn.classList.add('border-orange-500', 'bg-orange-50', 'text-orange-600');
-    document.getElementById('result-display').innerText = `${cat} 중에서 골라볼까요?`;
-    document.getElementById('result-display').classList.remove('text-slate-300');
-    document.getElementById('result-display').classList.add('text-slate-800');
+    
+    const display = document.getElementById('result-display');
+    display.innerText = `${currentTime} ${cat} 중에서 골라볼까요?`;
+    display.classList.remove('text-slate-300');
+    display.classList.add('text-slate-800');
 }
 
 function runRoulette() {
@@ -43,8 +60,8 @@ function runRoulette() {
         if (count > 25) {
             clearInterval(timer);
             const finalMenu = display.innerText;
-            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">Today:</span> <span class="text-slate-900 font-black">${finalMenu}</span>`;
-            saveToHistory(finalMenu, currentCategory);
+            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">${currentTime} 추천:</span> <span class="text-slate-900 font-black">${finalMenu}</span>`;
+            saveToHistory(finalMenu, `${currentTime} ${currentCategory}`);
             btn.disabled = false;
         }
     }, 50);
@@ -57,7 +74,6 @@ function saveToHistory(menu, category) {
     localStorage.setItem('foodHistory', JSON.stringify(history));
 }
 
-// Column Logic
 async function loadColumns() {
     try {
         const response = await fetch('data/columns.json');
@@ -113,11 +129,13 @@ function openColumnModal(index) {
 
 function closeColumnModal() {
     const modal = document.getElementById('column-modal');
-    document.getElementById('column-modal-box').classList.add('scale-95', 'opacity-0');
-    setTimeout(() => modal.classList.add('hidden'), 300);
+    const box = document.getElementById('column-modal-box');
+    if (box) box.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        if (modal) modal.classList.add('hidden');
+    }, 300);
 }
 
-// History Modal
 function openHistoryModal() {
     const list = document.getElementById('history-list');
     list.innerHTML = history.map(item => `
@@ -133,14 +151,21 @@ function openHistoryModal() {
     const modal = document.getElementById('history-modal');
     modal.classList.remove('hidden');
     setTimeout(() => {
-        document.getElementById('history-modal-box').classList.remove('scale-95', 'opacity-0');
-        document.getElementById('history-modal-box').classList.add('scale-100', 'opacity-100');
+        const box = document.getElementById('history-modal-box');
+        if (box) {
+            box.classList.remove('scale-95', 'opacity-0');
+            box.classList.add('scale-100', 'opacity-100');
+        }
     }, 10);
 }
 
 function closeHistoryModal() {
-    document.getElementById('history-modal-box').classList.add('scale-95', 'opacity-0');
-    setTimeout(() => document.getElementById('history-modal').classList.add('hidden'), 300);
+    const box = document.getElementById('history-modal-box');
+    if (box) box.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        const modal = document.getElementById('history-modal');
+        if (modal) modal.classList.add('hidden');
+    }, 300);
 }
 
 function clearHistory() {
