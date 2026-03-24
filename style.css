@@ -50,18 +50,49 @@ footer {
 /* Single Page Navigation Fix */
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 
-/* Carousel Styles */
-#carousel-container { perspective: 1000px; }
+/* Carousel Styles - Single Premium Card View */
+#carousel-container { 
+    perspective: 1000px; 
+    width: 100%;
+}
+#column-list {
+    display: flex;
+    width: 100%;
+}
 #column-list article { 
     flex: 0 0 100%; 
     min-width: 100%; 
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    padding: 2rem; /* Larger padding */
 }
 #column-list article:active { transform: scale(0.98); }
 
 .dot { width: 6px; height: 6px; border-radius: 50%; background: #e2e8f0; transition: all 0.3s; }
-.dot.active { width: 14px; background: #6366f1; border-radius: 10px; }
+.dot.active { width: 24px; background: #6366f1; border-radius: 10px; }
+
+/* Mobile UI Fixes */
+@media (max-width: 640px) {
+    #column-list article {
+        padding: 1.5rem;
+    }
+    #column-list h3 {
+        font-size: 1.25rem;
+    }
+    #column-list p {
+        font-size: 0.875rem;
+        -webkit-line-clamp: 4; /* Show a bit more on mobile if needed */
+    line-clamp: 4;
+    }
+    .btn-time {
+        padding: 0.75rem !important;
+        font-size: 1rem !important;
+    }
+    .btn-type {
+        padding: 0.5rem !important;
+        font-size: 0.875rem !important;
+    }
+}
 
 /* Expansion / Modal for Full Article */
 .article-full-overlay { 

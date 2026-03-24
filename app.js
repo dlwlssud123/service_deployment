@@ -258,15 +258,17 @@ async function loadColumns() {
         dotsContainer.innerHTML = '';
         columnData.forEach((col, index) => {
             const article = document.createElement('article');
-            article.className = "p-6 rounded-3xl border border-slate-50 bg-white/50 backdrop-blur-sm card-shadow mr-4";
+            article.className = "p-8 rounded-3xl border border-slate-50 bg-white/50 backdrop-blur-sm card-shadow flex flex-col justify-center min-h-[320px]";
             article.innerHTML = `
-                <div class="flex items-center space-x-2 mb-3">
-                    <span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">MAGAZINE</span>
+                <div class="flex items-center space-x-2 mb-4">
+                    <span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">MAGAZINE</span>
                     <span class="text-slate-400 text-[10px] font-medium">${col.date}</span>
                 </div>
-                <h3 class="text-lg font-bold mb-2 text-slate-800 line-clamp-1">${col.title}</h3>
-                <p class="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-2">${col.content}</p>
-                <span class="text-xs font-bold text-indigo-500">계속 읽기 <i class="fa-solid fa-arrow-right-long ml-1"></i></span>
+                <h3 class="text-2xl md:text-3xl font-extrabold mb-4 text-slate-900 leading-tight">${col.title}</h3>
+                <p class="text-slate-600 text-sm md:text-base leading-loose line-clamp-3 mb-6">${col.content}</p>
+                <div class="mt-auto">
+                    <span class="text-sm font-bold text-indigo-500 hover:text-indigo-600 transition-colors cursor-pointer">칼럼 전체 읽기 <i class="fa-solid fa-arrow-right-long ml-2"></i></span>
+                </div>
             `;
             article.onclick = () => openColumnDetail(col);
             list.appendChild(article);
