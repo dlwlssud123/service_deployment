@@ -373,8 +373,39 @@ document.getElementById('gen-col-btn').addEventListener('click', async () => {
     }
 });
 
+// --- Column Data Handling ---
+async function loadColumns() {
+    const list = document.getElementById('column-list');
+    try {
+        const response = await fetch('data/columns.json');
+        if (!response.ok) throw new Error('Failed to load columns');
+        const data = await response.json();
+        
+        // Clear except for the initial layout or just rebuild
+        list.innerHTML = '';
+        data.forEach((col, index) => {
+            const article = document.createElement('article');
+            article.className = "bg-white p-6 rounded-3xl card-shadow border border-slate-50";
+            article.innerHTML = `
+                <div class="flex items-center space-x-2 mb-3">
+                    <span class="${index === 0 ? 'bg-orange-100 text-orange-600' : 'bg-indigo-100 text-indigo-600'} text-xs font-bold px-2 py-1 rounded-md">
+                        ${index === 0 ? 'LATEST' : 'MAGAZINE'}
+                    </span>
+                    <span class="text-slate-400 text-xs font-medium">${col.date}</span>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold mb-3 text-slate-800">${col.title}</h3>
+                <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-4">${col.content}</p>
+            `;
+            list.appendChild(article);
+        });
+    } catch (error) {
+        console.error("Could not load columns:", error);
+    }
+}
+
 // run!
 initSelectors();
+loadColumns();
 
 // --- PWA Service Worker Registration ---
 if ('serviceWorker' in navigator) {
