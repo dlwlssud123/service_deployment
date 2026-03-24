@@ -24,22 +24,25 @@ async function generateColumn() {
 기존에 다룬 주제들(${existingTitles})과 겹치지 않는 완전히 새로운 주제여야 해.`;
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    console.log("Connecting to Gemini API...");
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: sysPrompt + "\n\n" + userPrompt }] }],
-        generationConfig: {
-          temperature: 0.8,
-          responseMimeType: "application/json"
-        }
+        contents: [{ parts: [{ text: sysPrompt + "\n\n" + userPrompt }] }]
       })
     });
 
-    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP Error: ${response.status} - ${errorText}`);
+    }
     const result = await response.json();
-    const rawText = result.candidates[0].content.parts[0].text;
+    let rawText = result.candidates[0].content.parts[0].text;
+    
+    // Clean up markdown if AI includes it
+    rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
     const data = JSON.parse(rawText);
     
     // Add new
