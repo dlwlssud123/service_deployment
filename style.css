@@ -50,47 +50,44 @@ footer {
 /* Single Page Navigation Fix */
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 
-/* Carousel Styles - Single Premium Card View */
-#carousel-container { 
-    perspective: 1000px; 
+/* Featured Column Style - Premium Single Card */
+.featured-column-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 28px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
     width: 100%;
-}
-#column-list {
-    display: flex;
-    width: 100%;
-}
-#column-list article { 
-    flex: 0 0 100%; 
-    min-width: 100%; 
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    padding: 2rem; /* Larger padding */
 }
-#column-list article:active { transform: scale(0.98); }
+.featured-column-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); }
 
-.dot { width: 6px; height: 6px; border-radius: 50%; background: #e2e8f0; transition: all 0.3s; }
-.dot.active { width: 24px; background: #6366f1; border-radius: 10px; }
+.magazine-tag {
+    background: #f0f4ff;
+    color: #4f46e5;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 8px;
+    letter-spacing: 0.05em;
+}
 
-/* Mobile UI Fixes */
+/* Mobile UI Resilience */
 @media (max-width: 640px) {
-    #column-list article {
+    .featured-column-card {
         padding: 1.5rem;
     }
-    #column-list h3 {
-        font-size: 1.25rem;
-    }
-    #column-list p {
-        font-size: 0.875rem;
-        -webkit-line-clamp: 4; /* Show a bit more on mobile if needed */
-    line-clamp: 4;
-    }
-    .btn-time {
-        padding: 0.75rem !important;
-        font-size: 1rem !important;
-    }
-    .btn-type {
-        padding: 0.5rem !important;
-        font-size: 0.875rem !important;
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    
+    /* Fix buttons wrapping or cutting off */
+    .btn-time, .btn-type {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
     }
 }
 
