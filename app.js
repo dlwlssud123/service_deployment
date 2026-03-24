@@ -243,31 +243,84 @@ document.getElementById('clear-list-btn').onclick = () => {
 };
 
 // --- Carousel Architecture ---
+let currentColumnIndex = 0;
+let columnData = [];
+let autoPlayInterval;
+
 async function loadColumns() {
     const list = document.getElementById('column-list');
+    const dotsContainer = document.getElementById('carousel-dots');
     try {
         const response = await fetch('data/columns.json');
         if (!response.ok) throw new Error('Failed to load columns');
         columnData = await response.json();
         if (!columnData.length) return;
-        
-        // Only render the LATEST column as a featured card
-        const col = columnData[0];
-        list.innerHTML = `
-            <article class="featured-column-card">
+
+        list.innerHTML = '';
+        dotsContainer.innerHTML = '';
+
+        columnData.forEach((col, index) => {
+            const article = document.createElement('article');
+            article.innerHTML = `
                 <div class="flex items-center space-x-2 mb-4">
                     <span class="magazine-tag uppercase">MAGAZINE</span>
                     <span class="text-slate-400 text-[10px] font-medium">${col.date}</span>
                 </div>
                 <h3 class="text-2xl md:text-3xl font-extrabold mb-4 text-slate-900 leading-tight">${col.title}</h3>
-                <p class="text-slate-600 text-sm md:text-base leading-loose line-clamp-3 md:line-clamp-none mb-6">${col.content}</p>
+                <p class="text-slate-600 text-sm md:text-base leading-loose line-clamp-3 mb-6">${col.content}</p>
                 <div class="mt-auto">
-                    <span class="text-sm font-bold text-indigo-500 hover:text-indigo-600 transition-colors cursor-pointer">칼럼 전체 읽기 <i class="fa-solid fa-arrow-right-long ml-2"></i></span>
+                    <span class="text-sm font-bold text-indigo-500 hover:text-indigo-600 transition-colors">칼럼 전체 읽기 <i class="fa-solid fa-arrow-right-long ml-2"></i></span>
                 </div>
-            </article>
-        `;
-        list.onclick = () => openColumnDetail(col);
+            `;
+            article.onclick = () => {
+                stopAutoPlay();
+                openColumnDetail(col);
+                startAutoPlay();
+            };
+            list.appendChild(article);
+
+            const dot = document.createElement('div');
+            dot.className = `dot ${index === 0 ? 'active' : ''}`;
+            dot.onclick = (e) => {
+                e.stopPropagation();
+                goToColumn(index);
+            };
+            dotsContainer.appendChild(dot);
+        });
+
+        startAutoPlay();
     } catch (error) { console.error("Could not load columns:", error); }
+}
+
+function startAutoPlay() {
+    stopAutoPlay();
+    autoPlayInterval = setInterval(nextColumn, 5000);
+}
+
+function stopAutoPlay() {
+    if (autoPlayInterval) clearInterval(autoPlayInterval);
+}
+
+function updateCarousel() {
+    const list = document.getElementById('column-list');
+    const dots = document.querySelectorAll('.dot');
+    if (!list) return;
+    list.style.transform = `translateX(-${currentColumnIndex * 100}%)`;
+    dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentColumnIndex);
+    });
+}
+
+function nextColumn() {
+    if (!columnData.length) return;
+    currentColumnIndex = (currentColumnIndex + 1) % columnData.length;
+    updateCarousel();
+}
+
+function goToColumn(index) {
+    currentColumnIndex = index;
+    updateCarousel();
+    startAutoPlay();
 }
 
 function openColumnDetail(col) {

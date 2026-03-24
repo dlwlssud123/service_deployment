@@ -50,18 +50,28 @@ footer {
 /* Single Page Navigation Fix */
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 
-/* Featured Column Style - Premium Single Card */
-.featured-column-card {
+/* Refined Carousel Style - Single Card Auto-Play */
+#carousel-container { 
+    perspective: 1000px; 
+    width: 100%;
+    overflow: hidden;
+    border-radius: 28px;
+}
+#column-list {
+    display: flex;
+    width: 100%;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+#column-list article { 
+    flex: 0 0 100%; 
+    min-width: 100%; 
+    cursor: pointer;
+    padding: 2.5rem;
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 28px;
-    padding: 2.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s ease;
-    width: 100%;
-    cursor: pointer;
 }
-.featured-column-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); }
 
 .magazine-tag {
     background: #f0f4ff;
@@ -73,9 +83,12 @@ footer {
     letter-spacing: 0.05em;
 }
 
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #e2e8f0; transition: all 0.3s; }
+.dot.active { width: 24px; background: #6366f1; border-radius: 10px; }
+
 /* Mobile UI Resilience */
 @media (max-width: 640px) {
-    .featured-column-card {
+    #column-list article {
         padding: 1.5rem;
     }
     .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
