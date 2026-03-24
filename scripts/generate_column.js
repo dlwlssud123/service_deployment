@@ -24,7 +24,7 @@ async function generateColumn() {
 기존에 다룬 주제들(${existingTitles})과 겹치지 않는 완전히 새로운 주제여야 해.`;
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
     console.log("Connecting to Gemini API...");
     const response = await fetch(url, {
       method: 'POST',
