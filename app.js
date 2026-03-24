@@ -223,6 +223,7 @@ document.getElementById('clear-list-btn').addEventListener('click', () => {
 });
 
 function openModal(type) {
+    document.getElementById('clear-list-btn').classList.remove('hidden');
     currentListView = type;
     document.getElementById('modal-title').innerText = type === 'history' ? '🕒 최근 뽑은 내역' : '⭐ 내 북마크';
     renderModalList();
@@ -270,42 +271,105 @@ function renderModalList() {
     });
 }
 
-// --- Top & Bottom Nav Tabs Navigation ---
-document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const target = btn.dataset.target;
+// --- Carousel Logic ---
+let currentColumnIndex = 0;
+let columnData = [];
+let carouselInterval;
+
+async function loadColumns() {
+    const list = document.getElementById('column-list');
+    const dotsContainer = document.getElementById('carousel-dots');
+    try {
+        const response = await fetch('data/columns.json');
+        if (!response.ok) throw new Error('Failed to load columns');
+        columnData = await response.json();
         
-        // Reset styles for all nav buttons
-        document.querySelectorAll('.nav-btn').forEach(b => {
-            const isBottom = b.classList.contains('bottom-nav-btn');
-            if (isBottom) {
-                b.classList.remove('text-slate-900');
-                b.classList.add('text-slate-400');
-            } else {
-                b.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-                b.classList.add('text-slate-500');
-            }
+        list.innerHTML = '';
+        dotsContainer.innerHTML = '';
+        
+        columnData.forEach((col, index) => {
+            const article = document.createElement('article');
+            article.className = "p-6 rounded-3xl border border-slate-50 bg-white/50 backdrop-blur-sm card-shadow mr-4";
+            article.innerHTML = `
+                <div class="flex items-center space-x-2 mb-3">
+                    <span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">MAGAZINE</span>
+                    <span class="text-slate-400 text-[10px] font-medium">${col.date}</span>
+                </div>
+                <h3 class="text-lg font-bold mb-2 text-slate-800 line-clamp-1">${col.title}</h3>
+                <p class="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-2">${col.content}</p>
+                <span class="text-xs font-bold text-indigo-500">계속 읽기 <i class="fa-solid fa-arrow-right-long ml-1"></i></span>
+            `;
+            article.onclick = () => openColumnDetail(col);
+            list.appendChild(article);
+            
+            // Dot
+            const dot = document.createElement('div');
+            dot.className = `dot ${index === 0 ? 'active' : ''}`;
+            dotsContainer.appendChild(dot);
         });
         
-        // Hide all sections
-        document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
-        
-        // Activate selected targets (both top and bottom buttons pointing to it)
-        document.querySelectorAll(`.nav-btn[data-target="${target}"]`).forEach(b => {
-            const isBottom = b.classList.contains('bottom-nav-btn');
-            if (isBottom) {
-                b.classList.add('text-slate-900');
-                b.classList.remove('text-slate-400');
-            } else {
-                b.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-                b.classList.remove('text-slate-500');
-            }
-        });
-        
-        document.getElementById(target).classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        startCarousel();
+    } catch (error) {
+        console.error("Could not load columns:", error);
+    }
+}
+
+function startCarousel() {
+    clearInterval(carouselInterval);
+    carouselInterval = setInterval(nextColumn, 5000); // 5 seconds
+}
+
+function updateCarousel() {
+    const list = document.getElementById('column-list');
+    const dots = document.querySelectorAll('.dot');
+    const offset = currentColumnIndex * -100;
+    list.style.transform = `translateX(${offset}%)`;
+    
+    dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentColumnIndex);
     });
-});
+}
+
+function nextColumn() {
+    if (!columnData.length) return;
+    currentColumnIndex = (currentColumnIndex + 1) % columnData.length;
+    updateCarousel();
+}
+
+function prevColumn() {
+    if (!columnData.length) return;
+    currentColumnIndex = (currentColumnIndex - 1 + columnData.length) % columnData.length;
+    updateCarousel();
+}
+
+document.getElementById('next-col').addEventListener('click', () => { nextColumn(); startCarousel(); });
+document.getElementById('prev-col').addEventListener('click', () => { prevColumn(); startCarousel(); });
+
+function openColumnDetail(col) {
+    const modal = document.getElementById('list-modal');
+    const title = document.getElementById('modal-title');
+    const list = document.getElementById('modal-list');
+    const clearBtn = document.getElementById('clear-list-btn');
+    
+    title.innerText = "📖 푸드 매거진";
+    clearBtn.classList.add('hidden');
+    list.innerHTML = `
+        <div class="p-6 space-y-4">
+            <p class="text-[10px] font-bold text-indigo-500 uppercase">${col.date} 발행</p>
+            <h2 class="text-2xl font-black text-slate-900 leading-tight">${col.title}</h2>
+            <div class="h-1 w-12 bg-indigo-500 rounded-full"></div>
+            <p class="text-slate-600 text-base leading-loose whitespace-pre-wrap">${col.content}</p>
+        </div>
+    `;
+    
+    document.getElementById('list-modal').classList.remove('hidden');
+    document.getElementById('modal-box').classList.remove('scale-95', 'opacity-0');
+    document.getElementById('modal-box').classList.add('scale-100', 'opacity-100', 'max-w-md');
+}
+
+// Top Nav Buttons
+document.getElementById('view-history-btn-top').onclick = () => openModal('history');
+document.getElementById('view-bookmark-btn-top').onclick = () => openModal('bookmark');
 
 // --- Gemini API for AI Column ---
 const GEMINI_API_KEY = "YOUR-API-KEY-HERE"; // Will be injected or fetched from backend
