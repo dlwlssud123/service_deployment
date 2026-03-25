@@ -1,4 +1,4 @@
-name: Weekly AI Column Generator
+name: daily AI Column Generator
 
 on:
   schedule:
