@@ -24,7 +24,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/menu-recommend-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/menu-app:latest
 
       - name: GCP 서버(VM) 접속 및 컨테이너 재설정 (Deploy)
         uses: appleboy/ssh-action@v1.0.3
@@ -33,20 +33,19 @@ jobs:
           username: ${{ secrets.GCP_VM_USER }}    # SSH 접속 유저(예: ubuntu)
           key: ${{ secrets.GCP_SSH_KEY }}         # SSH Private Key
           script: |
-            # 1. 최신 이미지 Pull
-            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/menu-recommend-app:latest
+            # 1. 최신 이미지 Pull (이름 통일: menu-app)
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/menu-app:latest
             
-            # 2. 기존 실행 중인 컨테이너 중지 및 삭제 (존재할 경우에만)
+            # 2. 기존 실행 중인 컨테이너 중지 및 삭제
             sudo docker stop menu-app || true
             sudo docker rm menu-app || true
             
             # 3. 새로운 컨테이너 실행 (80번, 443번 포트 연결 + 인증서 볼륨 마운트)
-            # Full (Strict) 모드를 위해 443 포트와 볼륨 연동 필요
             sudo docker run -d --name menu-app \
               -p 80:80 -p 443:443 \
               -v ~/whattoeat/certs:/etc/nginx/certs:ro \
               --restart unless-stopped \
-              ${{ secrets.DOCKERHUB_USERNAME }}/menu-recommend-app:latest
+              ${{ secrets.DOCKERHUB_USERNAME }}/menu-app:latest
             
             # 안 쓰이는 예전 이미지 정리(dangling image 삭제)
             sudo docker image prune -f
