@@ -40,9 +40,11 @@ jobs:
             sudo docker stop menu-app || true
             sudo docker rm menu-app || true
             
-            # 3. 새로운 컨테이너 실행 (80번, 443번 포트 연결)
-            # Full (Strict) 모드를 위해 443 포트 매핑 필수
-            sudo docker run -d --name menu-app -p 80:80 -p 443:443 \
+            # 3. 새로운 컨테이너 실행 (80번, 443번 포트 연결 + 인증서 볼륨 마운트)
+            # Full (Strict) 모드를 위해 443 포트와 볼륨 연동 필요
+            sudo docker run -d --name menu-app \
+              -p 80:80 -p 443:443 \
+              -v ~/whattoeat/certs:/etc/nginx/certs:ro \
               --restart unless-stopped \
               ${{ secrets.DOCKERHUB_USERNAME }}/menu-recommend-app:latest
             
