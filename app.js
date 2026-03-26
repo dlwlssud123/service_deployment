@@ -244,19 +244,27 @@ function runRoulette() {
 }
 
 function setupResultUI(menu) {
+    console.log("Setting up Naver Search UI for:", menu);
     const naverBtn = document.getElementById('naver-search-btn');
+    const shareSection = document.getElementById('result-share');
+    
     if (naverBtn) {
         const query = encodeURIComponent(menu + ' 맛집');
         const url = `https://search.naver.com/search.naver?query=${query}`;
         
-        // Remove old listeners by replacing the element or just updating onclick
         naverBtn.onclick = (e) => {
             e.preventDefault();
             window.open(url, '_blank');
         };
-        naverBtn.href = url; // Fallback
+        naverBtn.href = url;
     }
-    document.getElementById('result-share').classList.remove('hidden');
+    
+    if (shareSection) {
+        shareSection.classList.remove('hidden');
+        shareSection.style.display = 'block'; // Direct style override for robustness
+    } else {
+        console.error("Critical Error: 'result-share' element not found in DOM!");
+    }
 }
 
 function saveToHistory(menu, category) {
