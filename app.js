@@ -229,7 +229,12 @@ function runRoulette() {
             clearInterval(timer);
             const finalMenu = display.innerText;
             const timeLabel = currentTime === '전체 시간' ? '추천' : currentTime;
-            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">${timeLabel} 추천:</span> <span class="text-slate-900 font-black">${finalMenu}</span>`;
+            const naverUrl = `https://search.naver.com/search.naver?query=${encodeURIComponent(finalMenu + ' 맛집')}`;
+            
+            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">${timeLabel} 추천:</span> 
+                                 <a href="${naverUrl}" target="_blank" class="text-slate-900 font-black hover:text-orange-500 underline decoration-slate-200 underline-offset-4 decoration-2 transition-colors">
+                                    ${finalMenu}
+                                 </a>`;
             
             saveToHistory(finalMenu, `${currentTime} ${currentCategory}`);
             setupResultUI(finalMenu);
