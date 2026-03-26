@@ -19,9 +19,9 @@ async function generateColumn() {
   }
 
   const existingTitles = currentColumns.map(c => c.title).join(', ');
-  const sysPrompt = "너는 유명한 음식 칼럼니스트이자 영양학, 심리학 전문가야. 사용자가 흥미로워할 식문화, 영양, 심리와 얽힌 칼럼을 구글 블로그 SEO 양식에 맞게 600자 가량으로 전문성 있게 써줘. JSON 포맷으로 { title, content } 를 리턴해.";
+  const sysPrompt = "너는 유명한 음식 칼럼니스트이자 영양학, 심리학 전문가야. 사용자가 흥미로워할 식문화, 영양, 심리와 얽힌 칼럼을 구글 블로그 SEO 양식에 맞게 **1000자 이상**으로 매우 상세하고 전문성 있게 써줘. 단순히 나열하는 것이 아니라 깊이 있는 통찰을 담아야 해. JSON 포맷으로 { title, content } 를 리턴해.";
   const userPrompt = `현대인의 식사 습관, 특정 식재료의 효능, 혹은 제철 음식에 대한 흥미로운 주제를 하나 선정해서 칼럼을 써줘. 
-기존에 다룬 주제들(${existingTitles})과 겹치지 않는 완전히 새로운 주제여야 해.`;
+기존에 다룬 주제들(${existingTitles})과 겹치지 않는 완전히 새로운 주제여야 해. 서론, 본론(최소 2~3개 섹션), 결론의 구조를 갖춰줘.`;
 
   try {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;

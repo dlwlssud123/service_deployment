@@ -108,14 +108,16 @@ function renderCard(index) {
     if (!data) return;
 
     content.innerHTML = `
-        <article onclick="openColumnModal(${index})" class="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:border-indigo-100 transition-all slide-in cursor-pointer">
-            <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-2">${data.title}</h3>
-            <p class="text-xs text-slate-500 leading-relaxed line-clamp-3">${data.content}</p>
-            <div class="mt-4 flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-medium italic">AI 분석 • ${index + 1}/${columnData.length}</span>
-                <span class="text-[10px] text-indigo-500 font-bold uppercase tracking-widest">Read More</span>
-            </div>
-        </article>
+        <a href="column.html?id=${data.id}" class="block">
+            <article class="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:border-indigo-100 transition-all slide-in cursor-pointer">
+                <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-2">${data.title}</h3>
+                <p class="text-xs text-slate-500 leading-relaxed line-clamp-3">${data.content}</p>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="text-[10px] text-slate-400 font-medium italic">AI 분석 • ${index + 1}/${columnData.length}</span>
+                    <span class="text-[10px] text-indigo-500 font-bold uppercase tracking-widest">Read More</span>
+                </div>
+            </article>
+        </a>
     `;
 }
 
@@ -127,19 +129,55 @@ function startRotation() {
     }, 5000);
 }
 
-function openColumnModal(index) {
-    const col = columnData[index];
-    document.getElementById('modal-title').innerText = col.title;
-    document.getElementById('modal-content').innerText = col.content;
-    document.getElementById('modal-date').innerText = col.date || 'AI Magazine';
-    
-    const modal = document.getElementById('column-modal');
-    modal.classList.remove('hidden');
-    setTimeout(() => {
-        document.getElementById('column-modal-box').classList.remove('scale-95', 'opacity-0');
-        document.getElementById('column-modal-box').classList.add('scale-100', 'opacity-100');
-    }, 10);
+// Roulette sharing functions
+function shareResult(type) {
+    const display = document.getElementById('result-display');
+    const menuText = display.innerText;
+    const shareText = `오늘 ${currentTime} 메뉴는? ${menuText}! #whattoeat #식사추천`;
+    const shareUrl = window.location.origin;
+
+    if (type === 'twitter') {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+    } else if (type === 'facebook') {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+    } else if (type === 'kakao') {
+        window.open(`https://story.kakao.com/share?url=${encodeURIComponent(shareUrl)}`, '_blank');
+    } else if (type === 'copy') {
+        navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+            const msg = document.getElementById('share-copy-msg');
+            msg.classList.remove('opacity-0');
+            setTimeout(() => msg.classList.add('opacity-0'), 2000);
+        });
+    } else if (type === 'native') {
+        if (navigator.share) {
+            navigator.share({ title: '오늘의 메뉴 추천', text: shareText, url: shareUrl }).catch(() => {});
+        }
+    }
 }
+
+// Update runRoulette to show share buttons
+const originalRunRoulette = runRoulette;
+runRoulette = function() {
+    document.getElementById('result-share').classList.add('hidden');
+    const btn = document.getElementById('main-btn');
+    const display = document.getElementById('result-display');
+    const pool = currentCategory === '전체' ? Object.values(foodData).flat() : foodData[currentCategory];
+
+    btn.disabled = true;
+    let count = 0;
+    const timer = setInterval(() => {
+        display.innerText = pool[Math.floor(Math.random() * pool.length)];
+        count++;
+        if (count > 25) {
+            clearInterval(timer);
+            const finalMenu = display.innerText;
+            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">${currentTime} 추천:</span> <span class="text-slate-900 font-black">${finalMenu}</span>`;
+            saveToHistory(finalMenu, `${currentTime} ${currentCategory}`);
+            btn.disabled = false;
+            document.getElementById('result-share').classList.remove('hidden');
+        }
+    }, 50);
+};
 
 function closeColumnModal() {
     const modal = document.getElementById('column-modal');
