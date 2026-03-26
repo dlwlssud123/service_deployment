@@ -231,10 +231,21 @@ function runRoulette() {
             const timeLabel = currentTime === '전체 시간' ? '추천' : currentTime;
             const naverUrl = `https://search.naver.com/search.naver?query=${encodeURIComponent(finalMenu + ' 맛집')}`;
             
-            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">${timeLabel} 추천:</span> 
-                                 <a href="${naverUrl}" target="_blank" class="text-slate-900 font-black hover:text-orange-500 underline decoration-slate-200 underline-offset-4 decoration-2 transition-colors">
-                                    ${finalMenu}
-                                 </a>`;
+            display.innerHTML = `
+                <div class="flex flex-col items-center space-y-4 animate-fade">
+                    <div class="text-xl sm:text-3xl">
+                        <span class="text-orange-500 mr-2 uppercase font-bold">${timeLabel} 추천:</span> 
+                        <a href="${naverUrl}" target="_blank" class="text-slate-900 font-black hover:text-orange-500 underline decoration-slate-200 underline-offset-4 decoration-2 transition-colors">
+                            ${finalMenu}
+                        </a>
+                    </div>
+                    <div class="pt-2">
+                        <a href="${naverUrl}" target="_blank" class="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#03C75A] text-white rounded-xl font-bold text-xs hover:opacity-90 transition-all shadow-md">
+                            <span class="text-[10px] bg-white text-[#03C75A] w-4 h-4 rounded-sm flex items-center justify-center">N</span>
+                            <span>네이버에서 맛집 찾기</span>
+                        </a>
+                    </div>
+                </div>`;
             
             saveToHistory(finalMenu, `${currentTime} ${currentCategory}`);
             setupResultUI(finalMenu);

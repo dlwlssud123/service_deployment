@@ -1,4 +1,4 @@
-const CACHE_NAME = 'whattoeat-cache-v1';
+const CACHE_NAME = 'whattoeat-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -11,9 +11,10 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
+        console.log('Opened cache v2');
         return cache.addAll(urlsToCache);
       })
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -25,7 +26,10 @@ self.addEventListener('fetch', event => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
+        return fetch(event.request).then(response => {
+           // Optional: Dynamic cache
+           return response;
+        });
       })
   );
 });
@@ -37,10 +41,11 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
