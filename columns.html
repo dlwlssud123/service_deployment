@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미식 칼럼 아카이브 - whattoeat.shop</title>
+    <meta name="description" content="음식 심리학, 영양학, 식문화에 대한 전문 칼럼 모음. AI 기반 분석으로 매주 새로운 미식 인사이트를 제공합니다.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="미식 칼럼 아카이브 - whattoeat.shop">
+    <meta property="og:description" content="음식 심리학, 영양학, 식문화에 대한 전문 칼럼 모음">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whattoeat.shop/columns.html">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="text-slate-900 overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <a href="index.html" class="text-xl font-black tracking-tighter text-orange-600 uppercase hover:text-orange-700 transition-colors">whattoeat.shop</a>
+            <nav class="flex items-center space-x-4">
+                <a href="index.html" class="text-xs font-bold text-slate-500 hover:text-orange-600 transition-colors">홈</a>
+                <a href="columns.html" class="text-xs font-bold text-orange-600 transition-colors">칼럼</a>
+                <a href="about.html" class="text-xs font-bold text-slate-500 hover:text-orange-600 transition-colors">소개</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+
+        <!-- Page Header -->
+        <section class="space-y-3 animate-fade">
+            <h1 class="text-2xl sm:text-3xl font-black tracking-tight">미식 칼럼 아카이브</h1>
+            <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+                음식 심리학, 영양학, 식문화에 대한 전문 칼럼을 만나보세요.<br>
+                AI 기반 분석으로 매주 새로운 미식 인사이트를 제공합니다.
+            </p>
+        </section>
+
+        <!-- Column List -->
+        <section id="column-list" class="space-y-4 animate-fade" style="animation-delay: 0.1s;">
+            <!-- Columns will be injected here by JS, with noscript fallback below -->
+        </section>
+
+        <noscript>
+            <section class="space-y-4">
+                <p class="text-slate-500 text-sm">JavaScript를 활성화하면 더 나은 경험을 제공합니다.</p>
+            </section>
+        </noscript>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-2xl mx-auto px-6 py-12 border-t border-slate-200 space-y-4">
+        <div class="text-center space-y-3">
+            <p class="text-[10px] text-slate-400 font-medium tracking-tight uppercase">whattoeat.shop | AI-Powered Food Recommendation</p>
+            <p class="text-[10px] text-slate-300 font-light">"데이터로 더 나은 선택을 만듭니다."</p>
+        </div>
+        <div class="flex justify-center space-x-4 text-[10px]">
+            <a href="privacy.html" class="text-slate-400 font-bold underline hover:text-orange-600 transition-colors uppercase">Privacy Policy</a>
+            <a href="about.html" class="text-slate-400 font-bold underline hover:text-orange-600 transition-colors uppercase">About</a>
+        </div>
+        <div class="text-center pt-2">
+            <a href="mailto:vbnm963245@gmail.com" class="text-[10px] text-slate-400 hover:text-orange-600 transition-colors">
+                <i class="fa-solid fa-envelope mr-1"></i>vbnm963245@gmail.com
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        async function loadColumns() {
+            try {
+                const response = await fetch('data/columns.json');
+                const columns = await response.json();
+                const container = document.getElementById('column-list');
+
+                container.innerHTML = columns.map((col, i) => `
+                    <a href="column.html?id=${col.id}" class="block group">
+                        <article class="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all">
+                            <div class="flex items-start justify-between mb-3">
+                                <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">${col.date || 'AI Magazine'}</span>
+                                <span class="text-[10px] text-slate-300 font-medium">#${col.id}</span>
+                            </div>
+                            <h2 class="font-bold text-slate-800 text-base sm:text-lg mb-3 group-hover:text-indigo-600 transition-colors leading-snug">${col.title}</h2>
+                            <p class="text-xs sm:text-sm text-slate-500 leading-relaxed line-clamp-3">${col.content.substring(0, 200)}...</p>
+                            <div class="mt-4 flex items-center justify-end">
+                                <span class="text-[10px] text-indigo-500 font-bold uppercase tracking-widest group-hover:translate-x-1 transition-transform">Read More →</span>
+                            </div>
+                        </article>
+                    </a>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load columns:', error);
+            }
+        }
+        loadColumns();
+    </script>
+</body>
+</html>

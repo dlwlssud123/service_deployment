@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서비스 소개 - whattoeat.shop | 데이터 기반 음식 추천</title>
+    <meta name="description" content="whattoeat.shop은 결정 피로를 해결하는 AI 기반 음식 추천 서비스입니다. 데이터 분석과 심리학을 결합하여 매일의 식사 선택을 도와드립니다.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="서비스 소개 - whattoeat.shop">
+    <meta property="og:description" content="결정 피로를 해결하는 AI 기반 음식 추천 서비스">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whattoeat.shop/about.html">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+        .feature-card { transition: all 0.3s ease; }
+        .feature-card:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="text-slate-900 overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <a href="index.html" class="text-xl font-black tracking-tighter text-orange-600 uppercase hover:text-orange-700 transition-colors">whattoeat.shop</a>
+            <nav class="flex items-center space-x-4">
+                <a href="index.html" class="text-xs font-bold text-slate-500 hover:text-orange-600 transition-colors">홈</a>
+                <a href="columns.html" class="text-xs font-bold text-slate-500 hover:text-orange-600 transition-colors">칼럼</a>
+                <a href="about.html" class="text-xs font-bold text-orange-600 transition-colors">소개</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+
+        <!-- Hero Section -->
+        <section class="space-y-5 animate-fade">
+            <h1 class="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
+                매일의 <span class="text-orange-600">결정 피로</span>를<br>해결합니다
+            </h1>
+            <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+                whattoeat.shop은 현대인이 매일 겪는 "오늘 뭐 먹지?"라는 고민을 해결하기 위해 만들어진 서비스입니다.
+                심리학에서 말하는 <strong>결정 피로(Decision Fatigue)</strong>는 하루에 수많은 선택을 내리며 쌓이는 정신적 피로입니다.
+                특히 식사 메뉴 선택은 매일 3번 이상 반복되는 대표적인 소소한 결정으로, 누적되면 의외로 큰 스트레스가 됩니다.
+            </p>
+        </section>
+
+        <!-- Mission Section -->
+        <section class="space-y-5 animate-fade" style="animation-delay: 0.1s;">
+            <div class="flex items-center space-x-2">
+                <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
+                <h2 class="text-lg sm:text-xl font-bold">우리의 미션</h2>
+            </div>
+            <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl p-6 sm:p-8 border border-orange-100">
+                <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
+                    우리는 <strong>"데이터로 더 나은 선택을 만든다"</strong>는 철학 아래, 단순한 랜덤 추천을 넘어
+                    시간대, 카테고리, 식문화 트렌드를 반영한 스마트한 음식 추천 경험을 제공합니다.
+                    매일의 작은 결정에서 벗어나, 정말 중요한 일에 에너지를 집중할 수 있도록 돕는 것이 우리의 목표입니다.
+                </p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="space-y-5 animate-fade" style="animation-delay: 0.15s;">
+            <div class="flex items-center space-x-2">
+                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>
+                <h2 class="text-lg sm:text-xl font-bold">주요 기능</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="feature-card p-5 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-dice text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm mb-2">스마트 메뉴 룰렛</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">시간대(아침/점심/간식/저녁/야식)와 카테고리(한식/중식/일식/양식/디저트)를 선택하면, 최적의 메뉴를 추천해 드립니다. 결정 장애를 즉시 해소하세요.</p>
+                </div>
+                <div class="feature-card p-5 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-newspaper text-indigo-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm mb-2">AI 미식 칼럼</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">AI가 분석하는 음식 심리학, 영양학, 식문화 트렌드 칼럼을 정기적으로 발행합니다. 먹는 행위 뒤에 숨겨진 흥미로운 과학을 탐구합니다.</p>
+                </div>
+                <div class="feature-card p-5 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-clock-rotate-left text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm mb-2">추천 히스토리</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">최근 추천받은 메뉴 기록을 로컬에 저장합니다. 어제 뭘 먹었는지 떠올리기 어려울 때, 히스토리를 확인하고 중복을 피할 수 있습니다.</p>
+                </div>
+                <div class="feature-card p-5 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-mobile-screen text-purple-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm mb-2">PWA 지원</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">앱 설치 없이 홈 화면에 추가하여 네이티브 앱처럼 사용할 수 있습니다. 오프라인에서도 기본 기능을 이용할 수 있어 언제 어디서든 편리합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="space-y-5 animate-fade" style="animation-delay: 0.2s;">
+            <div class="flex items-center space-x-2">
+                <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                <h2 class="text-lg sm:text-xl font-bold">사용 방법</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-start space-x-4 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-8 h-8 bg-orange-500 text-white rounded-xl flex items-center justify-center font-black text-sm flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="font-bold text-sm mb-1">시간대 선택</h3>
+                        <p class="text-xs text-slate-500">아침, 점심, 간식, 저녁, 야식 중 현재 원하는 시간대를 선택합니다.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-8 h-8 bg-orange-500 text-white rounded-xl flex items-center justify-center font-black text-sm flex-shrink-0">2</div>
+                    <div>
+                        <h3 class="font-bold text-sm mb-1">카테고리 선택</h3>
+                        <p class="text-xs text-slate-500">한식, 중식, 일식, 양식, 디저트 또는 전체 중 기분에 맞는 카테고리를 선택합니다.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-8 h-8 bg-orange-500 text-white rounded-xl flex items-center justify-center font-black text-sm flex-shrink-0">3</div>
+                    <div>
+                        <h3 class="font-bold text-sm mb-1">룰렛 시작</h3>
+                        <p class="text-xs text-slate-500">"지금 바로 뽑기" 버튼을 누르면 룰렛이 돌아가며 오늘의 메뉴를 추천해 드립니다. 결과는 히스토리에 자동 저장됩니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Background Story -->
+        <section class="space-y-5 animate-fade" style="animation-delay: 0.25s;">
+            <div class="flex items-center space-x-2">
+                <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                <h2 class="text-lg sm:text-xl font-bold">개발 배경</h2>
+            </div>
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm">
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-4">
+                    하루에 약 35,000번의 결정을 내린다는 사실을 알고 계셨나요? 그중 식사와 관련된 결정만 하루
+                    평균 226번에 달한다고 합니다. "뭐 먹을까?"라는 질문이 단순해 보이지만, 영양, 가격, 위치,
+                    동반자의 취향까지 고려하면 결코 쉬운 결정이 아닙니다.
+                </p>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-4">
+                    whattoeat.shop은 이런 일상적인 결정 피로를 덜어주기 위해 탄생했습니다.
+                    복잡한 회원가입이나 개인정보 입력 없이, 접속하자마자 바로 사용할 수 있는
+                    초경량 음식 추천 도구를 지향합니다.
+                </p>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    단순한 랜덤 추천을 넘어, 음식과 관련된 심리학, 영양학, 문화적 이야기를
+                    AI 칼럼을 통해 함께 전달함으로써, 이 사이트를 방문할 때마다 작은 즐거움과
+                    새로운 지식을 얻어갈 수 있도록 만들었습니다.
+                </p>
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="space-y-5 animate-fade" style="animation-delay: 0.3s;">
+            <div class="flex items-center space-x-2">
+                <span class="w-1.5 h-1.5 bg-slate-500 rounded-full"></span>
+                <h2 class="text-lg sm:text-xl font-bold">기술 스택</h2>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600">HTML5 / CSS3</span>
+                <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600">JavaScript (Vanilla)</span>
+                <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600">Tailwind CSS</span>
+                <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600">PWA</span>
+                <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600">Gemini AI</span>
+                <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600">Nginx</span>
+                <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600">Docker</span>
+                <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600">GitHub Actions CI/CD</span>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="space-y-5 animate-fade" style="animation-delay: 0.35s;">
+            <div class="flex items-center space-x-2">
+                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                <h2 class="text-lg sm:text-xl font-bold">문의</h2>
+            </div>
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm text-center space-y-4">
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    서비스에 대한 문의, 제안, 또는 협업 요청은 아래 이메일로 연락해 주세요.
+                </p>
+                <a href="mailto:vbnm963245@gmail.com" class="inline-flex items-center space-x-2 px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all shadow-md">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>vbnm963245@gmail.com</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-2xl mx-auto px-6 py-12 border-t border-slate-200 space-y-4">
+        <div class="text-center space-y-3">
+            <p class="text-[10px] text-slate-400 font-medium tracking-tight uppercase">whattoeat.shop | AI-Powered Food Recommendation</p>
+            <p class="text-[10px] text-slate-300 font-light">"데이터로 더 나은 선택을 만듭니다."</p>
+        </div>
+        <div class="flex justify-center space-x-4 text-[10px]">
+            <a href="privacy.html" class="text-slate-400 font-bold underline hover:text-orange-600 transition-colors uppercase">Privacy Policy</a>
+            <a href="columns.html" class="text-slate-400 font-bold underline hover:text-orange-600 transition-colors uppercase">Columns</a>
+        </div>
+        <div class="text-center pt-2">
+            <a href="mailto:vbnm963245@gmail.com" class="text-[10px] text-slate-400 hover:text-orange-600 transition-colors">
+                <i class="fa-solid fa-envelope mr-1"></i>vbnm963245@gmail.com
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

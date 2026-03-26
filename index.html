@@ -3,12 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>whattoeat.shop - 데이터 기반 음식 추천</title>
+    <title>whattoeat.shop - 데이터 기반 음식 추천 | 오늘 뭐 먹지? 결정 장애 해결</title>
+    <meta name="description" content="매일 반복되는 '오늘 뭐 먹지?' 고민을 해결하세요. AI 기반 스마트 음식 추천 룰렛과 미식 칼럼을 제공합니다. 한식, 중식, 일식, 양식, 디저트 추천.">
+    <meta name="keywords" content="음식 추천, 오늘 뭐 먹지, 메뉴 추천, 점심 메뉴, 저녁 메뉴, 음식 룰렛, AI 음식 추천, 결정 장애">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="whattoeat.shop">
+    <link rel="canonical" href="https://whattoeat.shop/">
     
+    <!-- Open Graph -->
+    <meta property="og:title" content="whattoeat.shop - AI 기반 음식 추천 서비스">
+    <meta property="og:description" content="매일 반복되는 '오늘 뭐 먹지?' 고민을 해결하세요. 스마트 음식 추천 룰렛과 미식 칼럼을 제공합니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whattoeat.shop/">
+    <meta property="og:site_name" content="whattoeat.shop">
+    <meta property="og:locale" content="ko_KR">
+
     <!-- PWA / App Meta Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="sitemap" type="application/xml" href="sitemap.xml">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -46,15 +60,44 @@
         }
         
         .modal-overlay { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); }
+        .share-btn { transition: all 0.2s ease; }
+        .share-btn:hover { transform: translateY(-2px); }
     </style>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "whattoeat.shop",
+        "description": "AI 기반 음식 추천 서비스. 결정 피로를 해소하는 스마트 메뉴 룰렛과 미식 칼럼을 제공합니다.",
+        "url": "https://whattoeat.shop",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "KRW"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "whattoeat.shop",
+            "email": "vbnm963245@gmail.com"
+        }
+    }
+    </script>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
 
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-2xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-            <h1 class="text-xl font-black tracking-tighter text-orange-600 uppercase">whattoeat.shop</h1>
-            <div class="flex items-center space-x-2">
+            <a href="index.html" class="text-xl font-black tracking-tighter text-orange-600 uppercase hover:text-orange-700 transition-colors">whattoeat.shop</a>
+            <div class="flex items-center space-x-4">
+                <nav class="hidden sm:flex items-center space-x-4">
+                    <a href="columns.html" class="text-xs font-bold text-slate-500 hover:text-orange-600 transition-colors">칼럼</a>
+                    <a href="about.html" class="text-xs font-bold text-slate-500 hover:text-orange-600 transition-colors">소개</a>
+                </nav>
                 <button onclick="openHistoryModal()" class="p-2 text-slate-400 hover:text-slate-900"><i class="fa-solid fa-clock-rotate-left"></i></button>
                 <div class="text-[9px] font-bold text-slate-400 border border-slate-200 px-2 py-1 rounded-full uppercase tracking-widest">v2.5 Stable</div>
             </div>
@@ -67,7 +110,7 @@
         <section class="space-y-6 sm:space-y-8 animate-fade">
             <div class="space-y-1">
                 <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">오늘의 메뉴 추천</h2>
-                <p class="text-slate-500 text-xs sm:text-sm">결정 장애를 해결해 드립니다.</p>
+                <p class="text-slate-500 text-xs sm:text-sm">결정 장애를 해결해 드립니다. 시간대와 카테고리를 선택하고 룰렛을 돌려보세요.</p>
             </div>
 
             <!-- Time Selection -->
@@ -96,16 +139,58 @@
                     지금 바로 뽑기
                 </button>
             </div>
+
+            <!-- Result Share (shown after roulette) -->
+            <div id="result-share" class="hidden text-center space-y-3 animate-fade">
+                <p class="text-xs text-slate-400 font-medium">결과를 친구에게 공유하세요</p>
+                <div class="flex justify-center space-x-3">
+                    <button onclick="shareResult('twitter')" class="share-btn w-9 h-9 rounded-full bg-[#1DA1F2] text-white flex items-center justify-center shadow-sm" title="Twitter">
+                        <i class="fa-brands fa-twitter text-xs"></i>
+                    </button>
+                    <button onclick="shareResult('facebook')" class="share-btn w-9 h-9 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-sm" title="Facebook">
+                        <i class="fa-brands fa-facebook-f text-xs"></i>
+                    </button>
+                    <button onclick="shareResult('kakao')" class="share-btn w-9 h-9 rounded-full bg-[#FEE500] text-slate-900 flex items-center justify-center shadow-sm" title="카카오">
+                        <i class="fa-solid fa-comment text-xs"></i>
+                    </button>
+                    <button onclick="shareResult('copy')" class="share-btn w-9 h-9 rounded-full bg-slate-700 text-white flex items-center justify-center shadow-sm" title="링크 복사">
+                        <i class="fa-solid fa-link text-xs"></i>
+                    </button>
+                    <button onclick="shareResult('native')" class="share-btn w-9 h-9 rounded-full bg-gradient-to-br from-orange-500 to-pink-500 text-white flex items-center justify-center shadow-sm" title="공유">
+                        <i class="fa-solid fa-share-nodes text-xs"></i>
+                    </button>
+                </div>
+                <p id="share-copy-msg" class="text-xs text-green-500 font-bold opacity-0 transition-opacity">복사되었습니다!</p>
+            </div>
         </section>
 
-        <!-- Section 2: Single Column Slider (SEO Content) -->
+        <!-- Section 2: SEO Content - Service Description -->
+        <section class="space-y-5 animate-fade" style="animation-delay: 0.05s;">
+            <div class="bg-gradient-to-br from-slate-50 to-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm space-y-4">
+                <h2 class="text-base sm:text-lg font-bold text-slate-800 flex items-center">
+                    <span class="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2"></span>
+                    왜 메뉴 선택이 어려울까요?
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    심리학 연구에 따르면, 인간은 하루에 약 <strong>35,000번</strong>의 결정을 내리며 그중 식사 관련 결정만 <strong>226번</strong>에 달합니다.
+                    이러한 반복적인 의사결정은 <strong>"결정 피로(Decision Fatigue)"</strong>를 유발하고, 실제로 저녁 시간대에 메뉴 선택이 더 어려운 이유이기도 합니다.
+                </p>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    whattoeat.shop은 이 문제를 해결하기 위해 탄생했습니다. 시간대별, 카테고리별로 최적화된 메뉴 풀에서
+                    룰렛 방식으로 추천하여 결정 에너지를 절약하고, 식사 시간을 즐거운 경험으로 바꿔드립니다.
+                    <a href="about.html" class="text-indigo-500 font-bold hover:text-indigo-700 transition-colors">자세히 알아보기 →</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: Column Slider (SEO Content) -->
         <section class="space-y-5 sm:space-y-6 animate-fade" style="animation-delay: 0.1s;">
             <div class="flex items-center justify-between px-1">
                 <h2 class="text-base sm:text-lg font-bold flex items-center">
                     <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full mr-2"></span>
                     미식 칼럼
                 </h2>
-                <div class="text-[9px] font-bold text-slate-300 uppercase tracking-widest italic">AI Daily Update</div>
+                <a href="columns.html" class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest hover:text-indigo-700 transition-colors">전체 보기 →</a>
             </div>
 
             <div id="column-container" class="relative min-h-[160px] sm:min-h-[180px]">
@@ -115,7 +200,7 @@
             </div>
         </section>
 
-        <!-- Section 3: Advertisement -->
+        <!-- Section 4: Advertisement -->
         <section class="animate-fade" style="animation-delay: 0.2s;">
             <div id="ad-space" class="w-full py-2 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center">
                 <ins class="adsbygoogle"
@@ -128,34 +213,42 @@
             </div>
         </section>
 
+        <!-- Section 5: Mobile Nav (visible on small screens) -->
+        <section class="sm:hidden animate-fade" style="animation-delay: 0.25s;">
+            <div class="grid grid-cols-3 gap-2">
+                <a href="columns.html" class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm text-center hover:border-indigo-200 transition-all">
+                    <i class="fa-solid fa-newspaper text-indigo-500 text-lg mb-2"></i>
+                    <p class="text-[10px] font-bold text-slate-600">미식 칼럼</p>
+                </a>
+                <a href="about.html" class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm text-center hover:border-orange-200 transition-all">
+                    <i class="fa-solid fa-circle-info text-orange-500 text-lg mb-2"></i>
+                    <p class="text-[10px] font-bold text-slate-600">서비스 소개</p>
+                </a>
+                <a href="privacy.html" class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm text-center hover:border-slate-300 transition-all">
+                    <i class="fa-solid fa-shield-halved text-slate-400 text-lg mb-2"></i>
+                    <p class="text-[10px] font-bold text-slate-600">개인정보</p>
+                </a>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="max-w-2xl mx-auto px-6 py-12 border-t border-slate-200 text-center space-y-3">
-        <p class="text-[10px] text-slate-400 font-medium tracking-tight uppercase">whattoeat.shop | AI-Powered Solution</p>
-        <div class="flex justify-center space-x-4">
+    <footer class="max-w-2xl mx-auto px-6 py-12 border-t border-slate-200 space-y-4">
+        <div class="text-center space-y-3">
+            <p class="text-[10px] text-slate-400 font-medium tracking-tight uppercase">whattoeat.shop | AI-Powered Food Recommendation</p>
             <p class="text-[10px] text-slate-300 font-light">"데이터로 더 나은 선택을 만듭니다."</p>
-            <a href="privacy.html" class="text-[10px] text-slate-400 font-bold underline hover:text-orange-600 transition-colors uppercase">Privacy Policy</a>
+        </div>
+        <div class="flex justify-center space-x-4 text-[10px]">
+            <a href="columns.html" class="text-slate-400 font-bold underline hover:text-orange-600 transition-colors uppercase">Columns</a>
+            <a href="about.html" class="text-slate-400 font-bold underline hover:text-orange-600 transition-colors uppercase">About</a>
+            <a href="privacy.html" class="text-slate-400 font-bold underline hover:text-orange-600 transition-colors uppercase">Privacy Policy</a>
+        </div>
+        <div class="text-center pt-2">
+            <a href="mailto:vbnm963245@gmail.com" class="text-[10px] text-slate-400 hover:text-orange-600 transition-colors">
+                <i class="fa-solid fa-envelope mr-1"></i>vbnm963245@gmail.com
+            </a>
         </div>
     </footer>
-
-    <!-- Column Detail Modal -->
-    <div id="column-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 modal-overlay transition-all">
-        <div id="column-modal-box" class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300">
-            <div class="p-6 sm:p-8 space-y-6">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest" id="modal-date">AI Magazine</span>
-                        <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-1 leading-tight" id="modal-title">칼럼 제목</h2>
-                    </div>
-                    <button onclick="closeColumnModal()" class="p-2 text-slate-400 hover:text-slate-900"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div class="w-12 h-1 bg-indigo-500 rounded-full"></div>
-                <div id="modal-content" class="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-wrap max-h-[60vh] overflow-y-auto pr-2">
-                    내용...
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- History Modal -->
     <div id="history-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 modal-overlay transition-all">
