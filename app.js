@@ -1,24 +1,164 @@
 let currentCategory = '전체';
-let currentTime = '점심';
+let currentTime = '전체 시간';
 let columnData = [];
 let currentColumnIndex = 0;
 let rotationInterval = null;
 let history = JSON.parse(localStorage.getItem('foodHistory') || '[]');
 
-const foodData = {
-    '한식': ['비빔밥', '김치찌개', '제육볶음', '순대국', '불고기', '냉면', '삼겹살', '국밥', '닭갈비', '된장찌개'],
-    '중식': ['짜장면', '짬뽕', '볶음밥', '탕수육', '마파두부', '양장피', '유산슬', '멘보샤'],
-    '일식': ['초밥', '라멘', '돈카츠', '규동', '우동', '소바', '가츠동', '텐동', '사케동'],
-    '양식': ['파스타', '피자', '햄버거', '스테이크', '리조또', '샌드위치', '오므라이스', '감바스'],
-    '디저트': ['조각케이크', '마카롱', '크로플', '빙수', '에그타르트', '와플', '도넛', '쿠키']
-};
+// Expanded Menu Data (120+ items)
+const menuData = [
+    // 한식 (분식 포함)
+    { name: '비빔밥', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '김치찌개', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '제육볶음', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '된장찌개', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '불고기', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '삼겹살', categories: ['한식'], times: ['저녁', '야식'] },
+    { name: '갈비탕', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '설렁탕', categories: ['한식'], times: ['아침', '점심', '저녁'] },
+    { name: '순두부찌개', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '육개장', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '닭갈비', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '보쌈', categories: ['한식'], times: ['저녁', '야식'] },
+    { name: '족발', categories: ['한식'], times: ['저녁', '야식'] },
+    { name: '찜닭', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '아구찜', categories: ['한식'], times: ['저녁', '야식'] },
+    { name: '감자탕', categories: ['한식'], times: ['점심', '저녁', '야식'] },
+    { name: '순대국', categories: ['한식'], times: ['아침', '점심', '저녁', '야식'] },
+    { name: '곰탕', categories: ['한식'], times: ['아침', '점심', '저녁'] },
+    { name: '청국장', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '콩나물국밥', categories: ['한식'], times: ['아침', '점심', '저녁'] },
+    { name: '비빔냉면', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '물냉면', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '칼국수', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '수제비', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '잔치국수', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '비빔국수', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '콩국수', categories: ['한식'], times: ['점심'] },
+    { name: '떡볶이', categories: ['한식'], times: ['점심', '간식', '저녁', '야식'] },
+    { name: '김밥', categories: ['한식'], times: ['아침', '점심', '간식'] },
+    { name: '순대', categories: ['한식'], times: ['간식', '저녁', '야식'] },
+    { name: '튀김', categories: ['한식'], times: ['간식', '야식'] },
+    { name: '어묵', categories: ['한식'], times: ['아침', '간식', '야식'] },
+    { name: '라면', categories: ['한식'], times: ['아침', '간식', '야식'] },
+    { name: '쫄면', categories: ['한식'], times: ['점심', '간식'] },
+    { name: '파전', categories: ['한식'], times: ['저녁', '야식'] },
+    { name: '김치전', categories: ['한식'], times: ['저녁', '야식'] },
+    { name: '계란찜', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '잡채', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '떡만두국', categories: ['한식'], times: ['아침', '점심', '저녁'] },
+    { name: '미역국', categories: ['한식'], times: ['아침', '점심', '저녁'] },
+    { name: '북어국', categories: ['한식'], times: ['아침', '점심', '저녁'] },
+    { name: '고등어조림', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '갈치조림', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '오징어볶음', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '낙지볶음', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '제육덮밥', categories: ['한식'], times: ['점심', '저녁'] },
+    { name: '김치볶음밥', categories: ['한식'], times: ['아침', '점심', '저녁'] },
+
+    // 중식
+    { name: '짜장면', categories: ['중식'], times: ['점심', '저녁'] },
+    { name: '짬뽕', categories: ['중식'], times: ['점심', '저녁', '야식'] },
+    { name: '볶음밥', categories: ['중식'], times: ['점심', '저녁'] },
+    { name: '탕수육', categories: ['중식'], times: ['점심', '저녁', '야식'] },
+    { name: '간짜장', categories: ['중식'], times: ['점심', '저녁'] },
+    { name: '우동(중식)', categories: ['중식'], times: ['점심', '저녁'] },
+    { name: '울면', categories: ['중식'], times: ['점심', '저녁'] },
+    { name: '마파두부', categories: ['중식'], times: ['점심', '저녁'] },
+    { name: '양장피', categories: ['중식'], times: ['저녁', '야식'] },
+    { name: '유산슬', categories: ['중식'], times: ['저녁', '야식'] },
+    { name: '팔보채', categories: ['중식'], times: ['저녁', '야식'] },
+    { name: '고추잡채', categories: ['중식'], times: ['저녁', '야식'] },
+    { name: '멘보샤', categories: ['중식'], times: ['간식', '저녁', '야식'] },
+    { name: '꿔바로우', categories: ['중식'], times: ['점심', '저녁', '야식'] },
+    { name: '마라탕', categories: ['중식'], times: ['점심', '저녁', '야식'] },
+    { name: '마라상궈', categories: ['중식'], times: ['저녁', '야식'] },
+    { name: '딤섬', categories: ['중식'], times: ['점심', '간식'] },
+    { name: '군만두', categories: ['중식'], times: ['간식', '야식'] },
+    { name: '물만두', categories: ['중식'], times: ['아침', '간식'] },
+    { name: '짜장밥', categories: ['중식'], times: ['점심', '저녁'] },
+    { name: '짬뽕밥', categories: ['중식'], times: ['점심', '저녁'] },
+
+    // 일식
+    { name: '초밥', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '라멘', categories: ['일식'], times: ['점심', '저녁', '야식'] },
+    { name: '돈카츠', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '규동', categories: ['일식'], times: ['아침', '점심', '저녁'] },
+    { name: '우동', categories: ['일식'], times: ['아침', '점심', '저녁', '야식'] },
+    { name: '소바', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '가츠동', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '텐동', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '사케동', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '야끼소바', categories: ['일식'], times: ['점심', '저녁', '야식'] },
+    { name: '오코노미야끼', categories: ['일식'], times: ['저녁', '야식'] },
+    { name: '타코야끼', categories: ['일식'], times: ['간식', '야식'] },
+    { name: '회덮밥', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '가츠카레', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '냉모밀', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '에비동', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '나베', categories: ['일식'], times: ['저녁', '야식'] },
+    { name: '샤브샤브(일식)', categories: ['일식'], times: ['점심', '저녁'] },
+    { name: '장어덮밥', categories: ['일식'], times: ['점심', '저녁'] },
+
+    // 양식
+    { name: '돈까스', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '함박스테이크', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '알리오올리오', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '까르보나라', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '토마토파스타', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '로제파스타', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '봉골레', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '스테이크', categories: ['양식'], times: ['저녁'] },
+    { name: '피자', categories: ['양식'], times: ['점심', '저녁', '야식'] },
+    { name: '햄버거', categories: ['양식'], times: ['점심', '저녁', '야식'] },
+    { name: '샌드위치', categories: ['양식'], times: ['아침', '점심', '간식'] },
+    { name: '오므라이스', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '그라탕', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '리조또', categories: ['양식'], times: ['점심', '저녁'] },
+    { name: '샐러드', categories: ['양식'], times: ['아침', '점심', '간식'] },
+    { name: '에그베네딕트', categories: ['양식'], times: ['아침'] },
+    { name: '프렌치토스트', categories: ['양식'], times: ['아침', '간식'] },
+    { name: '감바스', categories: ['양식'], times: ['저녁', '야식'] },
+    { name: '라자냐', categories: ['양식'], times: ['점심', '저녁'] },
+
+    // 기타 (해외식 등)
+    { name: '쌀국수', categories: ['기타'], times: ['아침', '점심', '저녁'] },
+    { name: '분짜', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '팟타이', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '나시고랭', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '미고랭', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '타코', categories: ['기타'], times: ['점심', '간식', '저녁', '야식'] },
+    { name: '브리또', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '퀘사디아', categories: ['기타'], times: ['간식', '저녁', '야식'] },
+    { name: '인도커리', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '탄두리치킨', categories: ['기타'], times: ['저녁', '야식'] },
+    { name: '똠양꿍', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '푸팟퐁커리', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '월남쌈', categories: ['기타'], times: ['점심', '저녁'] },
+    { name: '훠궈', categories: ['기타'], times: ['저녁', '야식'] },
+
+    // 디저트
+    { name: '조각케이크', categories: ['디저트'], times: ['간식'] },
+    { name: '마카롱', categories: ['디저트'], times: ['간식'] },
+    { name: '크로플', categories: ['디저트'], times: ['간식'] },
+    { name: '빙수', categories: ['디저트'], times: ['간식', '야식'] },
+    { name: '에그타르트', categories: ['디저트'], times: ['간식'] },
+    { name: '와플', categories: ['디저트'], times: ['간식'] },
+    { name: '도넛', categories: ['디저트'], times: ['아침', '간식'] },
+    { name: '쿠키', categories: ['디저트'], times: ['간식'] },
+    { name: '아이스크림', categories: ['디저트'], times: ['간식', '야식'] },
+    { name: '크레페', categories: ['디저트'], times: ['간식'] },
+    { name: '붕어빵', categories: ['디저트'], times: ['간식', '야식'] },
+    { name: '호떡', categories: ['디저트'], times: ['간식', '야식'] },
+    { name: '츄러스', categories: ['디저트'], times: ['간식'] }
+];
 
 document.addEventListener('DOMContentLoaded', () => {
     loadColumns();
     
-    // Default fallback selection
-    const defaultTimeBtn = Array.from(document.querySelectorAll('.time-btn')).find(b => b.innerText === '점심');
-    if (defaultTimeBtn) selectTime('점심', defaultTimeBtn);
+    // Default fallback selection (Using '전체 시간' as default for broader range)
+    const defaultTimeBtn = Array.from(document.querySelectorAll('.time-btn')).find(b => b.innerText === '전체 시간');
+    if (defaultTimeBtn) selectTime('전체 시간', defaultTimeBtn);
     
     const defaultCatBtn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.innerText === '전체');
     if (defaultCatBtn) selectCategory('전체', defaultCatBtn);
@@ -31,12 +171,7 @@ function selectTime(time, btn) {
         b.classList.add('border-slate-200', 'bg-white', 'text-slate-900');
     });
     btn.classList.add('border-orange-500', 'bg-orange-50', 'text-orange-600');
-    
-    // Update display text immediately when time changes
-    const activeCatBtn = document.querySelector('.cat-btn.text-orange-600');
-    if (activeCatBtn) {
-        updateDisplayText(currentTime, currentCategory);
-    }
+    updateDisplayText(currentTime, currentCategory);
 }
 
 function selectCategory(cat, btn) {
@@ -46,16 +181,16 @@ function selectCategory(cat, btn) {
         b.classList.add('border-slate-200', 'bg-white', 'text-slate-900');
     });
     btn.classList.add('border-orange-500', 'bg-orange-50', 'text-orange-600');
-    
     updateDisplayText(currentTime, cat);
 }
 
 function updateDisplayText(time, cat) {
     const display = document.getElementById('result-display');
+    const timeText = time === '전체 시간' ? '언제든 좋은' : time;
     if (cat === '전체') {
-        display.innerText = `오늘 ${time} 메뉴로 무엇이 좋을까요?`;
+        display.innerText = `오늘 ${timeText} 메뉴로 무엇이 좋을까요?`;
     } else {
-        display.innerText = `오늘 ${time}은 ${cat} 어때요? 😋`;
+        display.innerText = `${timeText} 전문 미식가가 추천하는 ${cat} 어때요? 😋`;
     }
     display.classList.remove('text-slate-300');
     display.classList.add('text-slate-800');
@@ -64,7 +199,26 @@ function updateDisplayText(time, cat) {
 function runRoulette() {
     const display = document.getElementById('result-display');
     const btn = document.getElementById('main-btn');
-    const pool = currentCategory === '전체' ? Object.values(foodData).flat() : foodData[currentCategory];
+    document.getElementById('result-share').classList.add('hidden');
+
+    // Filtering logic
+    let pool = menuData.filter(item => {
+        const timeMatch = (currentTime === '전체 시간') || item.times.includes(currentTime);
+        const catMatch = (currentCategory === '전체') || item.categories.includes(currentCategory);
+        return timeMatch && catMatch;
+    }).map(item => item.name);
+
+    if (pool.length === 0) {
+        display.innerText = "조건에 맞는 메뉴가 없어요 😢";
+        return;
+    }
+
+    // Randomness improvement: Avoid showing same item too often
+    // Shuffle pool
+    for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
 
     btn.disabled = true;
     let count = 0;
@@ -74,11 +228,23 @@ function runRoulette() {
         if (count > 25) {
             clearInterval(timer);
             const finalMenu = display.innerText;
-            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">${currentTime} 추천:</span> <span class="text-slate-900 font-black">${finalMenu}</span>`;
+            const timeLabel = currentTime === '전체 시간' ? '추천' : currentTime;
+            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">${timeLabel} 추천:</span> <span class="text-slate-900 font-black">${finalMenu}</span>`;
+            
             saveToHistory(finalMenu, `${currentTime} ${currentCategory}`);
+            setupResultUI(finalMenu);
             btn.disabled = false;
         }
     }, 50);
+}
+
+function setupResultUI(menu) {
+    // Naver search link
+    const naverBtn = document.getElementById('naver-search-btn');
+    if (naverBtn) {
+        naverBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(menu + ' 맛집')}`;
+    }
+    document.getElementById('result-share').classList.remove('hidden');
 }
 
 function saveToHistory(menu, category) {
@@ -129,11 +295,11 @@ function startRotation() {
     }, 5000);
 }
 
-// Roulette sharing functions
 function shareResult(type) {
     const display = document.getElementById('result-display');
-    const menuText = display.innerText;
-    const shareText = `오늘 ${currentTime} 메뉴는? ${menuText}! #whattoeat #식사추천`;
+    const fullText = display.innerText;
+    const menuName = fullText.split(':').pop()?.trim() || fullText;
+    const shareText = `오늘 메뉴는? ${menuName}! #whattoeat #식사추천`;
     const shareUrl = window.location.origin;
 
     if (type === 'twitter') {
@@ -153,39 +319,6 @@ function shareResult(type) {
             navigator.share({ title: '오늘의 메뉴 추천', text: shareText, url: shareUrl }).catch(() => {});
         }
     }
-}
-
-// Update runRoulette to show share buttons
-const originalRunRoulette = runRoulette;
-runRoulette = function() {
-    document.getElementById('result-share').classList.add('hidden');
-    const btn = document.getElementById('main-btn');
-    const display = document.getElementById('result-display');
-    const pool = currentCategory === '전체' ? Object.values(foodData).flat() : foodData[currentCategory];
-
-    btn.disabled = true;
-    let count = 0;
-    const timer = setInterval(() => {
-        display.innerText = pool[Math.floor(Math.random() * pool.length)];
-        count++;
-        if (count > 25) {
-            clearInterval(timer);
-            const finalMenu = display.innerText;
-            display.innerHTML = `<span class="text-orange-500 mr-2 uppercase">${currentTime} 추천:</span> <span class="text-slate-900 font-black">${finalMenu}</span>`;
-            saveToHistory(finalMenu, `${currentTime} ${currentCategory}`);
-            btn.disabled = false;
-            document.getElementById('result-share').classList.remove('hidden');
-        }
-    }, 50);
-};
-
-function closeColumnModal() {
-    const modal = document.getElementById('column-modal');
-    const box = document.getElementById('column-modal-box');
-    if (box) box.classList.add('scale-95', 'opacity-0');
-    setTimeout(() => {
-        if (modal) modal.classList.add('hidden');
-    }, 300);
 }
 
 function openHistoryModal() {

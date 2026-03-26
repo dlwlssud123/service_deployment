@@ -56,6 +56,7 @@
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
+            line-clamp: 3;
             overflow: hidden;
         }
         
@@ -115,6 +116,7 @@
 
             <!-- Time Selection -->
             <div class="flex flex-wrap gap-2 pb-2">
+                <button onclick="selectTime('전체 시간', this)" class="time-btn px-4 py-2 rounded-xl border border-orange-500 bg-orange-50 text-orange-600 text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">전체 시간</button>
                 <button onclick="selectTime('아침', this)" class="time-btn px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">아침</button>
                 <button onclick="selectTime('점심', this)" class="time-btn px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">점심</button>
                 <button onclick="selectTime('간식', this)" class="time-btn px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold hover:border-orange-500 transition-all active:scale-95 shadow-sm">간식</button>
@@ -141,8 +143,14 @@
             </div>
 
             <!-- Result Share (shown after roulette) -->
-            <div id="result-share" class="hidden text-center space-y-3 animate-fade">
-                <p class="text-xs text-slate-400 font-medium">결과를 친구에게 공유하세요</p>
+            <div id="result-share" class="hidden text-center space-y-4 animate-fade">
+                <div class="flex justify-center">
+                    <a id="naver-search-btn" href="#" target="_blank" class="inline-flex items-center space-x-2 px-6 py-3 bg-[#03C75A] text-white rounded-2xl font-bold text-sm hover:opacity-90 transition-all shadow-md shadow-green-100">
+                        <span class="text-xs">N</span>
+                        <span>네이버에서 검색하기</span>
+                    </a>
+                </div>
+                <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">결과를 친구에게 공유하세요</p>
                 <div class="flex justify-center space-x-3">
                     <button onclick="shareResult('twitter')" class="share-btn w-9 h-9 rounded-full bg-[#1DA1F2] text-white flex items-center justify-center shadow-sm" title="Twitter">
                         <i class="fa-brands fa-twitter text-xs"></i>
