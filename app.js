@@ -239,10 +239,17 @@ function runRoulette() {
 }
 
 function setupResultUI(menu) {
-    // Naver search link
     const naverBtn = document.getElementById('naver-search-btn');
     if (naverBtn) {
-        naverBtn.href = `https://search.naver.com/search.naver?query=${encodeURIComponent(menu + ' 맛집')}`;
+        const query = encodeURIComponent(menu + ' 맛집');
+        const url = `https://search.naver.com/search.naver?query=${query}`;
+        
+        // Remove old listeners by replacing the element or just updating onclick
+        naverBtn.onclick = (e) => {
+            e.preventDefault();
+            window.open(url, '_blank');
+        };
+        naverBtn.href = url; // Fallback
     }
     document.getElementById('result-share').classList.remove('hidden');
 }
