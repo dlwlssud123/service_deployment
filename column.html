@@ -193,15 +193,21 @@
         }
 
         function shareX() {
-            const url = `https://x.com/intent/tweet?text=${encodeURIComponent(getShareText())}&url=${encodeURIComponent(getShareUrl())}`;
-            window.open(url, '_blank', 'width=600,height=400');
+            const text = getShareText();
+            const url = "https://whattoeat.shop/column.html" + window.location.search;
+            const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+            const win = window.open(xUrl, '_blank', 'width=600,height=400');
+            if (!win) {
+                alert("팝업이 차단되었습니다. 공유 링크를 복사합니다.");
+                copyLink();
+            }
         }
 
         function shareInstagram() {
             if (navigator.share) {
                 navigator.share({
                     title: getShareText(),
-                    url: getShareUrl()
+                    url: "https://whattoeat.shop/column.html" + window.location.search
                 }).catch(() => copyLink());
             } else {
                 copyLink();
@@ -209,8 +215,13 @@
         }
 
         function shareKakao() {
-            const url = `https://sharer.kakao.com/talk/friends/picker/link?url=${encodeURIComponent(getShareUrl())}`;
-            window.open(url, '_blank', 'width=600,height=400');
+            const url = "https://whattoeat.shop/column.html" + window.location.search;
+            const kakaoUrl = `https://sharer.kakao.com/talk/friends/picker/link?url=${encodeURIComponent(url)}`;
+            const win = window.open(kakaoUrl, '_blank', 'width=600,height=400');
+            if (!win) {
+                alert("팝업이 차단되었습니다. 공유 링크를 복사합니다.");
+                copyLink();
+            }
         }
 
         function copyLink() {
