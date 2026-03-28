@@ -329,32 +329,51 @@ function startRotation() {
 function shareResult(type) {
     const display = document.getElementById('result-display');
     const fullText = display.innerText;
-    const menuName = fullText.split(':').pop()?.trim() || fullText;
+    const menuName = fullText.split(':').pop()?.trim() || fullText.split('추천:').pop()?.trim() || fullText;
     const shareText = `오늘 메뉴는? ${menuName}! #whattoeat #식사추천`;
-    const shareUrl = window.location.origin;
+    const shareUrl = "https://whattoeat.shop";
 
-    if (type === 'x') {
-        window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
-    } else if (type === 'instagram') {
-        // Instagram doesn't support direct URL sharing for web. 
-        // Fallback to copy link or native share if available.
-        if (navigator.share) {
-            navigator.share({ title: '오늘의 메뉴 추천', text: shareText, url: shareUrl }).catch(() => shareResult('copy'));
-        } else {
-            shareResult('copy');
-        }
-    } else if (type === 'kakao') {
-        // Simple KakaoTalk share link (might need SDK for full functionality)
-        window.open(`https://sharer.kakao.com/talk/friends/picker/link?url=${encodeURIComponent(shareUrl)}`, '_blank');
-    } else if (type === 'copy') {
+    if (type === 'copy') {
         navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
             const msg = document.getElementById('share-copy-msg');
-            msg.classList.remove('opacity-0');
-            setTimeout(() => msg.classList.add('opacity-0'), 2000);
+            if (msg) {
+                msg.classList.remove('opacity-0');
+                setTimeout(() => msg.classList.add('opacity-0'), 2000);
+            }
         });
-    } else if (type === 'native') {
-        if (navigator.share) {
-            navigator.share({ title: '오늘의 메뉴 추천', text: shareText, url: shareUrl }).catch(() => {});
+        return;
+    }
+
+    // Modern Share for Mobile (X, Instagram, KakaoTalk all work via native share)
+    if (navigator.share) {
+        if (type === 'instagram' || type === 'native') {
+            navigator.share({
+                title: 'whattoeat.shop 추천',
+                text: shareText,
+                url: shareUrl
+            }).catch(() => {
+                if (type === 'instagram') shareResult('copy');
+            });
+            return;
+        }
+    }
+
+    let url = '';
+    if (type === 'x') {
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    } else if (type === 'kakao') {
+        url = `https://sharer.kakao.com/talk/friends/picker/link?url=${encodeURIComponent(shareUrl)}`;
+    } else if (type === 'instagram') {
+        shareResult('copy');
+        return;
+    }
+
+    if (url) {
+        const win = window.open(url, '_blank', 'width=600,height=400');
+        if (!win) {
+            // Popup blocked, fallback to direct location or copy
+            alert("팝업이 차단되었습니다. 공유 링크를 복사합니다.");
+            shareResult('copy');
         }
     }
 }
