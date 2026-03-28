@@ -333,12 +333,19 @@ function shareResult(type) {
     const shareText = `오늘 메뉴는? ${menuName}! #whattoeat #식사추천`;
     const shareUrl = window.location.origin;
 
-    if (type === 'twitter') {
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
-    } else if (type === 'facebook') {
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+    if (type === 'x') {
+        window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+    } else if (type === 'instagram') {
+        // Instagram doesn't support direct URL sharing for web. 
+        // Fallback to copy link or native share if available.
+        if (navigator.share) {
+            navigator.share({ title: '오늘의 메뉴 추천', text: shareText, url: shareUrl }).catch(() => shareResult('copy'));
+        } else {
+            shareResult('copy');
+        }
     } else if (type === 'kakao') {
-        window.open(`https://story.kakao.com/share?url=${encodeURIComponent(shareUrl)}`, '_blank');
+        // Simple KakaoTalk share link (might need SDK for full functionality)
+        window.open(`https://sharer.kakao.com/talk/friends/picker/link?url=${encodeURIComponent(shareUrl)}`, '_blank');
     } else if (type === 'copy') {
         navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
             const msg = document.getElementById('share-copy-msg');
