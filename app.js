@@ -287,7 +287,7 @@ function saveToHistory(menu, category) {
 
 async function loadColumns() {
     try {
-        const response = await fetch('data/columns.json');
+        const response = await fetch('data/columns.json?v=' + new Date().getTime());
         if (!response.ok) throw new Error('Failed to load columns');
         columnData = await response.json();
         if (columnData.length > 0) {

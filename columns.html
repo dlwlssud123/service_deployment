@@ -87,7 +87,7 @@
     <script>
         async function loadColumns() {
             try {
-                const response = await fetch('data/columns.json');
+                const response = await fetch('data/columns.json?v=' + new Date().getTime());
                 const columns = await response.json();
                 const container = document.getElementById('column-list');
 

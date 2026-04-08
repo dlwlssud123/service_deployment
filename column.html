@@ -119,7 +119,7 @@
             const id = parseInt(params.get('id'));
 
             try {
-                const response = await fetch('data/columns.json');
+                const response = await fetch('data/columns.json?v=' + new Date().getTime());
                 allColumns = await response.json();
                 const columnIndex = allColumns.findIndex(c => c.id === id);
                 currentColumn = allColumns[columnIndex];
