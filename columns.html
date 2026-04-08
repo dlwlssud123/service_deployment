@@ -99,7 +99,7 @@
                                 <span class="text-[10px] text-slate-300 font-medium">#${col.id}</span>
                             </div>
                             <h2 class="font-bold text-slate-800 text-base sm:text-lg mb-3 group-hover:text-indigo-600 transition-colors leading-snug">${col.title}</h2>
-                            <p class="text-xs sm:text-sm text-slate-500 leading-relaxed line-clamp-3">${col.content.replace(/[#*`_~]/g, '').trim().substring(0, 200)}...</p>
+                            <p class="text-xs sm:text-sm text-slate-500 leading-relaxed line-clamp-3">${col.content.replace(/[#*`_~]/g, '').replace(/\\n|\n/g, ' ').trim().substring(0, 200)}...</p>
                             <div class="mt-4 flex items-center justify-end">
                                 <span class="text-[10px] text-indigo-500 font-bold uppercase tracking-widest group-hover:translate-x-1 transition-transform">Read More →</span>
                             </div>
