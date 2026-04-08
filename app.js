@@ -308,7 +308,7 @@ function renderCard(index) {
         <a href="column.html?id=${data.id}" class="block">
             <article class="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:border-indigo-100 transition-all slide-in cursor-pointer">
                 <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-2">${data.title}</h3>
-                <p class="text-xs text-slate-500 leading-relaxed line-clamp-3">${data.content}</p>
+                <p class="text-xs text-slate-500 leading-relaxed line-clamp-3">${data.content.replace(/[#*`_~]/g, '').trim()}</p>
                 <div class="mt-4 flex items-center justify-between">
                     <span class="text-[10px] text-slate-400 font-medium italic">AI 분석 • ${index + 1}/${columnData.length}</span>
                     <span class="text-[10px] text-indigo-500 font-bold uppercase tracking-widest">Read More</span>
