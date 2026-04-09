@@ -32,4 +32,9 @@ jobs:
           git config --local user.name "GitHub Action"
           git add data/columns.json
           git commit -m "chore: auto-generate weekly AI column" || echo "No changes to commit"
-          git push
+          git push origin master
+
+  deploy:
+    needs: generate
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
