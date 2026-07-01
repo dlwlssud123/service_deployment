@@ -1,8 +1,8 @@
 name: daily AI Column Generator
 
 on:
-  schedule:
-    - cron: '0 0 * * *' # Every day at 00:00 UTC (9:00 AM KST)
+#  schedule:
+#    - cron: '0 0 * * *' # Every day at 00:00 UTC (9:00 AM KST)
   workflow_dispatch: # Allow manual run
   
 permissions:
